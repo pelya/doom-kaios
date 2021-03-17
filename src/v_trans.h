@@ -35,7 +35,7 @@
 
 #include "doomtype.h"
 
-enum
+typedef enum
 {
     CR_NONE,
     CR_DARK,

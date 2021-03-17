@@ -328,7 +328,7 @@ P_CheckSight
 
     // killough 4/19/98: make fake floors and ceilings block monster view
 
-  if ((s1->heightsec != -1 &&
+    if ((s1->heightsec != -1 &&
        ((t1->z + t1->height <= sectors[s1->heightsec].floorheight &&
          t2->z >= sectors[s1->heightsec].floorheight) ||
         (t1->z >= sectors[s1->heightsec].ceilingheight &&

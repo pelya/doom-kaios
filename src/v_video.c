@@ -1009,7 +1009,7 @@ void WritePNGfile(char *filename, pixel_t *data,
     fclose(handle);
 
     EM_ASM({
-        var filename = Module.Pointer_stringify($0);
+        var filename = Module.UTF8ToString($0);
         var url = URL.createObjectURL(new Blob([Module.FS.readFile(filename)], {type: 'image/png'}));
         document.dispatchEvent(new CustomEvent("V_ScreenShot", { detail: { url: url } }));
         Module.FS.unlink(filename);

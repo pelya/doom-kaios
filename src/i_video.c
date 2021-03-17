@@ -464,9 +464,8 @@ static void LimitTextureSize(int *w_upscale, int *h_upscale)
     if ((*w_upscale < 1 && rinfo.max_texture_width > 0) ||
         (*h_upscale < 1 && rinfo.max_texture_height > 0))
     {
-        I_Error("CreateUpscaledTexture: Can't create a texture big enough for "
-                "the whole screen! Maximum texture size %dx%d",
-                rinfo.max_texture_width, rinfo.max_texture_height);
+        *w_upscale = 1;
+        *h_upscale = 1;
     }
 
     // We limit the amount of texture memory used for the intermediate buffer,
@@ -497,11 +496,8 @@ static void LimitTextureSize(int *w_upscale, int *h_upscale)
 
     if (*w_upscale != orig_w || *h_upscale != orig_h)
     {
-        printf("CreateUpscaledTexture: Limited texture size to %dx%d "
-               "(max %d pixels, max texture size %dx%d)\n",
-               *w_upscale * SCREENWIDTH, *h_upscale * SCREENHEIGHT,
-               max_scaling_buffer_pixels,
-               rinfo.max_texture_width, rinfo.max_texture_height);
+        *w_upscale = 1;
+        *h_upscale = 1;
     }
 }
 

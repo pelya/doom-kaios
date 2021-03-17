@@ -721,7 +721,7 @@ P_KillMobj
 
 	const char *s = HU_GetMapName();
 	EM_ASM_({
-        document.dispatchEvent(new CustomEvent("P_KillMobj", { detail: { mapname: Module.Pointer_stringify($0), source: Module.Pointer_stringify($1) } }));
+        document.dispatchEvent(new CustomEvent("P_KillMobj", { detail: { mapname: Module.UTF8ToString($0), source: Module.UTF8ToString($1) } }));
     }, s, t);
 
 	P_DropWeapon (target->player);

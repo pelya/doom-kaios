@@ -259,7 +259,7 @@ void I_Error (const char *error, ...)
     va_end(argptr);
 
     EM_ASM_({
-        document.dispatchEvent(new CustomEvent("I_Error", { detail: { errorMsg: Module.Pointer_stringify($0) } }));
+        document.dispatchEvent(new CustomEvent("I_Error", { detail: { errorMsg: Module.UTF8ToString($0) } }));
     }, msgbuf);
 
     // Shutdown. Here might be other errors.

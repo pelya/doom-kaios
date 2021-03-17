@@ -1031,7 +1031,7 @@ static void I_WEB_UnRegisterSong(void *handle)
                 delete window.doom_music_offset;
                 delete window.doom_music_start;
                 delete window.doom_music_looping;
-                var filename = Module.Pointer_stringify($0);
+                var filename = Module.UTF8ToString($0);
                 Module.FS.unlink("./" + filename);
             }catch(err){}
         }, current_filename);
@@ -1059,7 +1059,7 @@ static void *I_WEB_RegisterSong(void *data, int len)
         playing_substitute = true;
         current_filename = filename;
         EM_ASM_({
-            var filename = Module.Pointer_stringify($0);
+            var filename = Module.UTF8ToString($0);
             window.doom_music_filename = filename;
             fetch(filename).then(function(res){ return res.arrayBuffer(); }).then(function(audio){
                 var context = SDL2.audioContext;

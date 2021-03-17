@@ -684,7 +684,7 @@ void G_DoLoadLevel (void)
     const char *s = HU_GetMapName();
 
     EM_ASM_({
-        document.dispatchEvent(new CustomEvent("G_DoLoadLevel", { detail: { mapname: Module.Pointer_stringify($0) } }));
+        document.dispatchEvent(new CustomEvent("G_DoLoadLevel", { detail: { mapname: Module.UTF8ToString($0) } }));
     }, s);
 } 
 
@@ -1550,7 +1550,7 @@ void G_DoCompleted (void)
         var leveltime = $8;
         document.dispatchEvent(new CustomEvent("G_DoCompleted", {
             detail: {
-                mapname: Module.Pointer_stringify($0),
+                mapname: Module.UTF8ToString($0),
                 maxkills: maxkills,
                 maxitems: maxitems,
                 maxsecret: maxsecret,
@@ -1785,7 +1785,7 @@ void G_DoSaveGame (void)
 
     EM_ASM_({
         try{
-            var filename = Module.Pointer_stringify($0);
+            var filename = Module.UTF8ToString($0);
             var buffer = Module.FS.readFile(filename).buffer;
             document.dispatchEvent(new CustomEvent("G_SaveGame", { detail: { filename: filename, buffer: buffer } }));
         }catch(err){}

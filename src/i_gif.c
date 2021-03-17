@@ -31,7 +31,7 @@ void I_CloseGIF()
     gif = NULL;
 
     EM_ASM({
-        var filename = Module.Pointer_stringify($0);
+        var filename = Module.UTF8ToString($0);
         var url = URL.createObjectURL(new Blob([Module.FS.readFile(filename)], {type: 'image/gif'}));
         document.dispatchEvent(new CustomEvent("I_CloseGIF", { detail: { url: url } }));
         Module.FS.unlink(filename);
