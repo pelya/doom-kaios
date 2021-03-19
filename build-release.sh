@@ -8,12 +8,12 @@
 
 source "$PATH_EMSDK/emsdk_env.sh"
 
-mkdir -p debug
-cd debug
+mkdir -p release
+cd release
 
-[ -e Makefile ] || emcmake cmake -DCMAKE_BUILD_TYPE=Debug .. || exit 1
+[ -e Makefile ] || emcmake cmake -DCMAKE_BUILD_TYPE=Release .. || exit 1
 
-emmake make -j8 VERBOSE=1 || exit 1
+emmake make -j8 || exit 1
 
 cd ..
-./package-app.sh debug
+./package-app.sh release

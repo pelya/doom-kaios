@@ -1,0 +1,31 @@
+{
+  "name": "freedoom",
+  "short_name": "Freedoom",
+  "version": "1.00",
+  "description": "Freedoom is not affiliated with DOOM by id Software, and does not contain any content from that game. Source code: https://github.com/pelya/doom-kaios",
+  "subtitle": "First-person shooter",
+  "locales": {
+    "en-US": {
+      "name": "Freedoom",
+      "description": "Freedoom is not affiliated with DOOM by id Software, and does not contain any content from that game. Source code: https://github.com/pelya/doom-kaios",
+      "subtitle": "First-person shooter"
+    }
+  },
+  "default_locale": "en-US",
+  "launch_path": "/doom.html",
+  "icons": {
+    "56": "/icon_56.png",
+    "112": "/icon_112.png"
+  },
+  "theme_color": "#777700",
+  "developer": {
+    "name": "pelya",
+    "url": "https://github.com/pelya/doom-kaios"
+  },
+  "type": "web",
+  "fullscreen": "true",
+  "categories": [ "games" ],
+  "default_locale": "en-US",
+  "orientation": [ "landscape-primary" ],
+  "precompile": [ "doom.js" ]
+}
