@@ -26,8 +26,9 @@
 #include "m_misc.h"
 #include "m_argv.h"  // haleyjd 20110212: warning fix
 
-int		myargc;
-char**		myargv;
+static const char *cmdline[] = { "doom", "-nomusic" };
+int		myargc = sizeof(cmdline) / sizeof(cmdline[0]);
+char**		myargv = cmdline;
 
 
 

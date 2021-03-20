@@ -40,8 +40,8 @@ int main(int argc, char **argv)
 {
     // save arguments
 
-    myargc = argc;
-    myargv = argv;
+    //myargc = argc;
+    //myargv = argv;
 
     M_FindResponseFile();
 

@@ -645,13 +645,14 @@ void I_FinishUpdate (void)
     // Render this intermediate texture into the upscaled texture
     // using "nearest" integer scaling.
 
-    SDL_SetRenderTarget(renderer, texture_upscaled);
-    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    //SDL_SetRenderTarget(renderer, texture_upscaled);
+    //SDL_RenderCopy(renderer, texture, NULL, NULL);
 
     // Finally, render this upscaled texture to screen using linear scaling.
 
-    SDL_SetRenderTarget(renderer, NULL);
-    SDL_RenderCopy(renderer, texture_upscaled, NULL, NULL);
+    //SDL_SetRenderTarget(renderer, NULL);
+    //SDL_RenderCopy(renderer, texture_upscaled, NULL, NULL);
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
 
     // Draw!
 
@@ -918,14 +919,15 @@ static void SetVideoMode(void)
         }
 
         pixel_format = SDL_GetWindowPixelFormat(screen);
+        DEH_printf("SetVideoMode: SDL_CreateWindow %dx%d pixel format 0x%x bpp %d\n", w, h, pixel_format, SDL_BITSPERPIXEL(pixel_format));
 
         I_InitWindowTitle();
     }
 
     // The SDL_RENDERER_TARGETTEXTURE flag is required to render the
     // intermediate texture into the upscaled texture.
-    renderer_flags = SDL_RENDERER_TARGETTEXTURE;
-	
+    //renderer_flags = SDL_RENDERER_TARGETTEXTURE;
+
     if (SDL_GetCurrentDisplayMode(video_display, &mode) != 0)
     {
         I_Error("Could not get display mode for video display #%d: %s",
@@ -935,13 +937,13 @@ static void SetVideoMode(void)
     // Turn on vsync if we aren't in a -timedemo
     if (!singletics && mode.refresh_rate > 0)
     {
-        renderer_flags |= SDL_RENDERER_PRESENTVSYNC;
+        //renderer_flags |= SDL_RENDERER_PRESENTVSYNC;
     }
 
     if (force_software_renderer)
     {
-        renderer_flags |= SDL_RENDERER_SOFTWARE;
-        renderer_flags &= ~SDL_RENDERER_PRESENTVSYNC;
+        //renderer_flags |= SDL_RENDERER_SOFTWARE;
+        //renderer_flags &= ~SDL_RENDERER_PRESENTVSYNC;
     }
 
     if (renderer != NULL)
@@ -998,7 +1000,7 @@ static void SetVideoMode(void)
         SDL_PixelFormatEnumToMasks(pixel_format, &unused_bpp,
                                    &rmask, &gmask, &bmask, &amask);
         argbbuffer = SDL_CreateRGBSurface(0,
-                                          SCREENWIDTH, SCREENHEIGHT, 32,
+                                          SCREENWIDTH, SCREENHEIGHT, SDL_BITSPERPIXEL(pixel_format),
                                           rmask, gmask, bmask, amask);
         SDL_FillRect(argbbuffer, NULL, 0);
     }
