@@ -25,11 +25,11 @@ set(CMAKE_C_FLAGS " \
     -s EXTRA_EXPORTED_RUNTIME_METHODS=['FS','UTF8ToString'] \
     -s FORCE_FILESYSTEM=1 \
     --no-heap-copy \
-    --preload-file ${CMAKE_CURRENT_LIST_DIR}/../freedoom1.wad@freedoom1.wad \
+    --preload-file ${CMAKE_CURRENT_LIST_DIR}/freedoom1.wad@freedoom1.wad \
 ")
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
-    set(CMAKE_C_FLAGS_DEBUG "-s ASSERTIONS=2 --source-map-base http://localhost:8000/ -g")
+    set(CMAKE_C_FLAGS_DEBUG "-s ASSERTIONS=2 --source-map-base http://localhost:8000/")
     set(HTML_TEMPLATE ${CMAKE_CURRENT_LIST_DIR}/app/shell_minimal_debug.html)
 else()
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s ASSERTIONS=0")
