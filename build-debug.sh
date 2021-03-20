@@ -13,7 +13,10 @@ cd debug
 
 [ -e Makefile ] || emcmake cmake -DCMAKE_BUILD_TYPE=Debug .. || exit 1
 
+rm -f *.html
+
 emmake make -j8 VERBOSE=1 || exit 1
 
 cd ..
 ./package-app.sh debug
+./install.sh debug

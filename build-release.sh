@@ -17,3 +17,4 @@ emmake make -j8 || exit 1
 
 cd ..
 ./package-app.sh release
+./install.sh release
