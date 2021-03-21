@@ -918,6 +918,7 @@ static void SetVideoMode(void)
         }
 
         pixel_format = SDL_GetWindowPixelFormat(screen);
+        pixel_format = SDL_PIXELFORMAT_RGB565; // Native pixel format for KaiOS, disregard RGB888 format returned by the OS, the actual screen is 16bpp
         DEH_printf("SetVideoMode: SDL_CreateWindow %dx%d pixel format 0x%x bpp %d\n", w, h, pixel_format, SDL_BITSPERPIXEL(pixel_format));
 
         I_InitWindowTitle();
@@ -999,7 +1000,7 @@ static void SetVideoMode(void)
         SDL_PixelFormatEnumToMasks(pixel_format, &unused_bpp,
                                    &rmask, &gmask, &bmask, &amask);
         argbbuffer = SDL_CreateRGBSurface(0,
-                                          SCREENWIDTH, SCREENHEIGHT, 32,
+                                          SCREENWIDTH, SCREENHEIGHT, 16,
                                           rmask, gmask, bmask, amask);
         SDL_FillRect(argbbuffer, NULL, 0);
     }
