@@ -586,7 +586,7 @@ static void CreateUpscaledTexture(boolean force)
 void I_FinishUpdate (void)
 {
     static int lasttic;
-    int tics;
+    static int fps_counter;
     int i;
 
     if (!initialized)
@@ -601,15 +601,14 @@ void I_FinishUpdate (void)
 
     if (display_fps_dots)
     {
-	i = I_GetTime();
-	tics = i - lasttic;
-	lasttic = i;
-	if (tics > 20) tics = 20;
-
-	for (i=0 ; i<tics*4 ; i+=4)
-	    I_VideoBuffer[ (SCREENHEIGHT-1)*SCREENWIDTH + i] = 0xff;
-	for ( ; i<20*4 ; i+=4)
-	    I_VideoBuffer[ (SCREENHEIGHT-1)*SCREENWIDTH + i] = 0x0;
+        fps_counter++;
+        i = I_GetTimeMS();
+        if (i - lasttic > 2000)
+        {
+            DEH_printf("FPS %d\n", fps_counter / 2);
+            lasttic = i;
+            fps_counter = 0;
+        }
     }
 
     // Draw disk icon before blit, if necessary.

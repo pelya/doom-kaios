@@ -26,7 +26,13 @@
 #include "m_misc.h"
 #include "m_argv.h"  // haleyjd 20110212: warning fix
 
-static char *cmdline[] = { "doom", "-nomusic" };
+static char *cmdline[] = {
+    "doom",
+    "-nomusic", // OPL3 synthesizer is so CPU intensive, we are getting 1 frame per 10 seconds on KaiOS
+#ifdef SHOW_FPS
+    "-devparm",
+#endif
+};
 int		myargc = sizeof(cmdline) / sizeof(cmdline[0]);
 char**	myargv = cmdline;
 
