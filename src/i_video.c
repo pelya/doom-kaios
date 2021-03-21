@@ -1000,7 +1000,7 @@ static void SetVideoMode(void)
         SDL_PixelFormatEnumToMasks(pixel_format, &unused_bpp,
                                    &rmask, &gmask, &bmask, &amask);
         argbbuffer = SDL_CreateRGBSurface(0,
-                                          SCREENWIDTH, SCREENHEIGHT, SDL_BITSPERPIXEL(pixel_format),
+                                          SCREENWIDTH, SCREENHEIGHT, 32,
                                           rmask, gmask, bmask, amask);
         SDL_FillRect(argbbuffer, NULL, 0);
     }
@@ -1027,7 +1027,7 @@ static void SetVideoMode(void)
 
     // Initially create the upscaled texture for rendering to screen
 
-    CreateUpscaledTexture(true);
+    //CreateUpscaledTexture(true);
 }
 
 void I_InitGraphics(void)
