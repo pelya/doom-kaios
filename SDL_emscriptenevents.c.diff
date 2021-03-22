@@ -1,5 +1,14 @@
---- SDL_emscriptenevents.c-old	2021-03-22 02:29:04.173804175 +0200
-+++ SDL_emscriptenevents.c	2021-03-17 22:23:51.164947856 +0200
+--- SDL_emscriptenevents.c	2021-03-23 00:30:38.756427025 +0200
++++ SDL_emscriptenevents.c	2021-03-23 00:30:52.380494951 +0200
+@@ -138,7 +138,7 @@
+     /*  92 */   SDL_SCANCODE_UNKNOWN,
+     /*  93 */   SDL_SCANCODE_APPLICATION,
+     /*  94 */   SDL_SCANCODE_UNKNOWN,
+-    /*  95 */   SDL_SCANCODE_UNKNOWN,
++    /*  95 */   SDL_SCANCODE_ESCAPE,
+     /*  96 */   SDL_SCANCODE_KP_0,
+     /*  97 */   SDL_SCANCODE_KP_1,
+     /*  98 */   SDL_SCANCODE_KP_2,
 @@ -206,14 +206,14 @@
      /* 160 */   SDL_SCANCODE_GRAVE,
      /* 161 */   SDL_SCANCODE_UNKNOWN,
@@ -17,7 +26,7 @@
      /* 171 */   SDL_SCANCODE_RIGHTBRACKET,
      /* 172 */   SDL_SCANCODE_UNKNOWN,
      /* 173 */   SDL_SCANCODE_MINUS, /*FX*/
-@@ -485,6 +485,16 @@
+@@ -485,6 +485,22 @@
      if (keyEvent->keyCode < SDL_arraysize(emscripten_scancode_table)) {
          scancode = emscripten_scancode_table[keyEvent->keyCode];
  
@@ -29,20 +38,14 @@
 +            if (SDL_strncmp(keyEvent->key, "SoftRight", 10) == 0) {
 +                scancode = SDL_SCANCODE_AC_BACK;
 +            }
++            if (SDL_strncmp(keyEvent->key, "Call", 4) == 0) {
++                scancode = SDL_SCANCODE_KP_ENTER;
++            }
++            if (SDL_strncmp(keyEvent->key, "EndCall", 7) == 0) {
++                scancode = SDL_SCANCODE_ESCAPE;
++            }
 +        }
 +
          if (scancode != SDL_SCANCODE_UNKNOWN) {
  
              if (keyEvent->location == DOM_KEY_LOCATION_RIGHT) {
-@@ -566,10 +576,7 @@
-                  keyEvent->keyCode == 37 /* left */ ||
-                  keyEvent->keyCode == 38 /* up */ ||
-                  keyEvent->keyCode == 39 /* right */ ||
--                 keyEvent->keyCode == 40 /* down */ ||
--                 (keyEvent->keyCode >= 112 && keyEvent->keyCode <= 135) /* F keys*/ ||
--                 keyEvent->ctrlKey ||
--                 keyEvent->altKey;
-+                 keyEvent->keyCode == 40 /* down */;
- 
-     if (eventType == EMSCRIPTEN_EVENT_KEYDOWN && SDL_GetEventState(SDL_TEXTINPUT) == SDL_ENABLE && !is_nav_key)
-         prevent_default = SDL_FALSE;
