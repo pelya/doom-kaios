@@ -26,6 +26,8 @@
 #include "i_input.h"
 #include "m_argv.h"
 #include "m_config.h"
+#include "doom/doomstat.h"
+#include "deh_str.h"
 
 #include <emscripten.h>
 
@@ -255,6 +257,10 @@ void I_HandleKeyboardEvent(SDL_Event *sdlevent)
             event.data1 = TranslateKey(&sdlevent->key.keysym);
             event.data2 = GetLocalizedKey(&sdlevent->key.keysym);
             event.data3 = GetTypedChar(&sdlevent->key.keysym);
+            if (devparm)
+            {
+                DEH_printf("Key %d %s scancode %d\n", sdlevent->key.keysym.sym, SDL_GetKeyName(sdlevent->key.keysym.sym), sdlevent->key.keysym.scancode);
+            }
 
             if (event.data1 != 0 && !D_EqualsEventHead(&event))
             {
