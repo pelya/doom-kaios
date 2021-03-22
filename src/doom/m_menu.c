@@ -1133,6 +1133,10 @@ static char *M_SelectEndMessage(void)
 
 void M_QuitDOOM(int choice)
 {
+    // Force current window to close, this is the only way to clear app state
+    EM_ASM( window.open('','_self').close(); );
+
+    // This code will be never executed
     DEH_snprintf(endstring, sizeof(endstring), "%s\n\n" DOSY,
                  DEH_String(M_SelectEndMessage()));
 
