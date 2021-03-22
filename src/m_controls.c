@@ -148,12 +148,12 @@ int key_map_clearmark = 'c';
 
 // menu keys:
 
-int key_menu_activate  = KEY_ESCAPE;
+int key_menu_activate  = KEY_BACKSPACE;
 int key_menu_up        = KEY_UPARROW;
 int key_menu_down      = KEY_DOWNARROW;
 int key_menu_left      = KEY_LEFTARROW;
 int key_menu_right     = KEY_RIGHTARROW;
-int key_menu_back      = KEY_BACKSPACE;
+int key_menu_back      = KEY_ESCAPE;
 int key_menu_forward   = KEY_ENTER;
 int key_menu_confirm   = 'y';
 int key_menu_abort     = 'n';
