@@ -100,6 +100,8 @@ int			messageLastMenuActive;
 // timed message = no input from user
 boolean			messageNeedsInput;
 
+boolean		downloadFreedoom2Started = false;
+
 void    (*messageRoutine)(int response);
 
 char gammamsg[5][26] =
@@ -180,6 +182,7 @@ menu_t*	currentMenu;
 //
 static void M_NewGame(int choice);
 static void M_Episode(int choice);
+static void M_MoreEpisodes(int choice);
 static void M_ChooseSkill(int choice);
 static void M_LoadGame(int choice);
 static void M_SaveGame(int choice);
@@ -209,6 +212,7 @@ static void M_DrawReadThis1(void);
 static void M_DrawReadThis2(void);
 static void M_DrawNewGame(void);
 static void M_DrawEpisode(void);
+static void M_DrawMoreEpisodes(void);
 static void M_DrawOptions(void);
 static void M_DrawSound(void);
 static void M_DrawLoad(void);
@@ -271,6 +275,7 @@ enum
     ep2,
     ep3,
     ep4,
+    ep_more,
     ep_end
 } episodes_e;
 
@@ -279,7 +284,8 @@ menuitem_t EpisodeMenu[]=
     {1,"M_EPI1", M_Episode,'k'},
     {1,"M_EPI2", M_Episode,'t'},
     {1,"M_EPI3", M_Episode,'i'},
-    {1,"M_EPI4", M_Episode,'t'}
+    {1,"M_EPI4", M_Episode,'t'},
+    {1,"",       M_Episode,'m'},
 };
 
 menu_t  EpiDef =
@@ -290,6 +296,29 @@ menu_t  EpiDef =
     M_DrawEpisode,	// drawing routine ->
     48,63,              // x,y
     ep1			// lastOn
+};
+
+enum
+{
+    more_ep_download_freedoom2,
+    more_ep_select_wad,
+    more_ep_end
+} more_episodes_e;
+
+menuitem_t MoreEpisodesMenu[]=
+{
+    {1,"", M_MoreEpisodes,'k'},
+    {1,"", M_MoreEpisodes,'t'},
+};
+
+menu_t MoreEpisodesDef =
+{
+    more_ep_end,		// # of menu items
+    &EpiDef,			// previous menu
+    MoreEpisodesMenu,	// menuitem_t ->
+    M_DrawMoreEpisodes,	// drawing routine ->
+    48,63,				// x,y
+    more_ep_download_freedoom2	// lastOn
 };
 
 //
@@ -922,6 +951,7 @@ int     epi;
 void M_DrawEpisode(void)
 {
     V_DrawPatchDirect(54, 38, W_CacheLumpName(DEH_String("M_EPISOD"), PU_CACHE));
+    M_WriteText(48, 38 + LINEHEIGHT * 6, "MORE EPISODES");
 }
 
 void M_VerifyNightmare(int key)
@@ -947,6 +977,12 @@ void M_ChooseSkill(int choice)
 
 void M_Episode(int choice)
 {
+    if (choice == ep_more)
+    {
+        M_SetupNextMenu(&MoreEpisodesDef);
+        return;
+    }
+
     if ( (gamemode == shareware)
 	 && choice)
     {
@@ -959,7 +995,30 @@ void M_Episode(int choice)
     M_SetupNextMenu(&NewDef);
 }
 
+void M_DrawMoreEpisodes(void)
+{
+    M_WriteText(48, 38, "MORE EPISODES");
+    M_WriteText(48, 38 + LINEHEIGHT * 2,
+                downloadFreedoom2Started ?
+                "DOWNLOAD IN PROGRESS" : "DOWNLOAD FREEDOOM2.WAD");
+    M_WriteText(48, 38 + LINEHEIGHT * 3, "SELECT .WAD FROM SD CARD");
+}
 
+void M_MoreEpisodes(int choice)
+{
+    printf("M_MoreEpisodes %d\n", choice);
+    if (choice == more_ep_download_freedoom2 && !downloadFreedoom2Started)
+    {
+        downloadFreedoom2Started = true;
+#ifdef EMSCRIPTEN
+        EM_ASM( window.location.assign("https://github.com/pelya/doom-kaios/releases/download/freedoom-0.12.1/freedoom2.wad"); );
+#endif
+    }
+    if (choice == more_ep_select_wad)
+    {
+        //M_SetupNextMenu(&SelectWadDef);
+    }
+}
 
 //
 // M_Options
