@@ -85,7 +85,7 @@ With Emscripten, your main loop should not block anywhere - do not call sleep() 
 
 Use emscripten_set_main_loop() to call your main loop function after you initialized video and everything else
 
-Use emscripten_cancel_main_loop() and EM_ASM( window.open('','_self').close(); ); to exit the app,
+Use emscripten_cancel_main_loop() and EM_ASM( window.open("", "_self").close(); ); to exit the app,
 if you simply call exit(0) the app won't clear it's state and will show black screen on the next launch
 
 To write data to files that will not be deleted after you close the app, you have to mount a writable file system,
