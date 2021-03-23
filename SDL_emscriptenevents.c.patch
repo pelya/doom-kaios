@@ -1,5 +1,5 @@
---- SDL_emscriptenevents.c	2021-03-23 00:30:38.756427025 +0200
-+++ SDL_emscriptenevents.c	2021-03-23 00:30:52.380494951 +0200
+--- SDL_emscriptenevents.c-old	2021-03-23 00:30:38.756427025 +0200
++++ SDL_emscriptenevents.c	2021-03-23 02:04:30.059127428 +0200
 @@ -138,7 +138,7 @@
      /*  92 */   SDL_SCANCODE_UNKNOWN,
      /*  93 */   SDL_SCANCODE_APPLICATION,
@@ -49,3 +49,12 @@
          if (scancode != SDL_SCANCODE_UNKNOWN) {
  
              if (keyEvent->location == DOM_KEY_LOCATION_RIGHT) {
+@@ -573,6 +589,8 @@
+ 
+     if (eventType == EMSCRIPTEN_EVENT_KEYDOWN && SDL_GetEventState(SDL_TEXTINPUT) == SDL_ENABLE && !is_nav_key)
+         prevent_default = SDL_FALSE;
++    if (scancode == SDL_SCANCODE_VOLUMEUP || scancode == SDL_SCANCODE_VOLUMEDOWN)
++        prevent_default = SDL_FALSE;
+ 
+     return prevent_default;
+ }
