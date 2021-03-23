@@ -742,8 +742,10 @@ void M_QuickSave(void)
 	quickSaveSlot = -2;	// means to pick a slot now
 	return;
     }
-    DEH_snprintf(tempstring, 80, QSPROMPT, savegamestrings[quickSaveSlot]);
-    M_StartMessage(tempstring,M_QuickSaveResponse,true);
+    //DEH_snprintf(tempstring, 80, QSPROMPT, savegamestrings[quickSaveSlot]);
+    //M_StartMessage(tempstring,M_QuickSaveResponse,true);
+    M_DoSave(quickSaveSlot);
+    S_StartSound(NULL,sfx_swtchx);
 }
 
 

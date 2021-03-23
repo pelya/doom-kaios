@@ -407,5 +407,5 @@ boolean I_GetMemoryValue(unsigned int offset, void *value, int size)
 
 boolean I_IsMobile(void)
 {
-    return EM_ASM_INT(return +(typeof navigator.maxTouchPoints == "number" ? navigator.maxTouchPoints > 0 : "ontouchstart" in window));
+    return true;
 }
