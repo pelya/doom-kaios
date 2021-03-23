@@ -25,6 +25,7 @@
 #include "doomtype.h"
 #include "i_system.h"
 #include "m_argv.h"
+#include "m_misc.h"
 
 #include <emscripten.h>
 
@@ -36,6 +37,17 @@
 
 void D_DoomMain (void);
 
+void D_WaitFsInit(void)
+{
+    if (sys_fs_init_is_done())
+    {
+        M_FindResponseFile();
+
+        // start doom
+        D_DoomMain ();
+    }
+}
+
 int main(int argc, char **argv)
 {
     // save arguments
@@ -43,17 +55,9 @@ int main(int argc, char **argv)
     //myargc = argc;
     //myargv = argv;
 
-    M_FindResponseFile();
+    sys_fs_init();
 
-    // start doom
-
-    D_DoomMain ();
+    emscripten_set_main_loop(D_WaitFsInit, 0, 0);
 
     return 0;
-}
-
-EMSCRIPTEN_KEEPALIVE
-int start()
-{
-    return main(0, NULL);
 }

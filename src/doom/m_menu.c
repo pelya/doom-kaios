@@ -34,6 +34,7 @@
 #include "i_system.h"
 #include "i_timer.h"
 #include "i_video.h"
+#include "m_config.h"
 #include "m_misc.h"
 #include "v_video.h"
 #include "w_wad.h"
@@ -1137,8 +1138,10 @@ static char *M_SelectEndMessage(void)
 
 void M_QuitDOOM(int choice)
 {
+    M_SaveDefaults();
+
     // Force current window to close, this is the only way to clear app state
-    EM_ASM( window.open('','_self').close(); );
+    EM_ASM( setTimeout(function() { window.open("", "_self").close(); }, 200); );
 
     // This code will be never executed
     DEH_snprintf(endstring, sizeof(endstring), "%s\n\n" DOSY,

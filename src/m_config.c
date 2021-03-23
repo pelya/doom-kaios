@@ -1928,6 +1928,7 @@ void M_SaveDefaults (void)
 {
     SaveDefaultCollection(&doom_defaults);
     SaveDefaultCollection(&extra_defaults);
+    sys_fs_sync();
 }
 
 //
@@ -2153,7 +2154,7 @@ float M_GetFloatVariable(char *name)
 void M_SetConfigDir(const char *dir)
 {
     // Use the directory that was passed, or find the default.
-    configdir = ".";
+    configdir = FS_WRITE_MOUNT_POINT "/";
     printf("Using MemFS for configuration and saves\n");
 }
 

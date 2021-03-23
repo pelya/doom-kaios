@@ -1784,13 +1784,7 @@ void G_DoSaveGame (void)
     // draw the pattern into the back screen
     R_FillBackScreen ();
 
-    EM_ASM_({
-        try{
-            var filename = Module.UTF8ToString($0);
-            var buffer = Module.FS.readFile(filename).buffer;
-            document.dispatchEvent(new CustomEvent("G_SaveGame", { detail: { filename: filename, buffer: buffer } }));
-        }catch(err){}
-    }, savegame_file);
+    sys_fs_sync();
 }
  
 

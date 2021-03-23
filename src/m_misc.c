@@ -27,6 +27,10 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#ifdef EMSCRIPTEN
+#include "emscripten.h"
+#endif
+
 #include "doomtype.h"
 
 #include "deh_str.h"
@@ -181,6 +185,7 @@ boolean M_WriteFile(const char *name, void *source, int length)
 
     count = fwrite(source, 1, length, handle);
     fclose(handle);
+    sys_fs_sync();
 	
     if (count < length)
 	return false;
@@ -630,4 +635,61 @@ int M_snprintf(char *buf, size_t buf_len, const char *s, ...)
     result = M_vsnprintf(buf, buf_len, s, args);
     va_end(args);
     return result;
+}
+
+static int fs_initialized = 0;
+
+void sys_fs_init(void)
+{
+	if (!fs_initialized)
+	{
+		fs_initialized = 1;
+#ifdef EMSCRIPTEN
+		EM_ASM({
+			// Make a directory other than '/'
+			FS.mkdir(UTF8ToString($0));
+			// Then mount with IDBFS type
+			FS.mount(IDBFS, {}, UTF8ToString($0));
+			// Then sync
+			// var sys_fs_init_is_done = 0; // Defined in HTML file
+			FS.syncfs(true, function (err) {
+				if (err) alert('Error initializing filesystem');
+				//Module.print('sys_fs_init done, mount point ' + UTF8ToString($0));
+				sys_fs_init_is_done = 1;
+			});
+		}, FS_WRITE_MOUNT_POINT);
+#endif // EMSCRIPTEN
+	}
+}
+
+int sys_fs_init_is_done(void)
+{
+	if (!fs_initialized)
+	{
+		printf("Please call sys_fs_init() first\n");
+		exit(1);
+	}
+
+	int status = 1;
+#ifdef EMSCRIPTEN
+	status = EM_ASM_INT({ return sys_fs_init_is_done; });
+#endif // EMSCRIPTEN
+	return status;
+}
+
+void sys_fs_sync(void)
+{
+	if (!fs_initialized)
+	{
+		printf("Please call sys_fs_init() first\n");
+		exit(1);
+	}
+#ifdef EMSCRIPTEN
+	EM_ASM(
+		FS.syncfs(false, function (err) {
+			if (err) alert('Error writing to filesystem');
+			//Module.print('sys_fs_sync done');
+		});
+	);
+#endif // EMSCRIPTEN
 }

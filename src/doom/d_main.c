@@ -496,7 +496,7 @@ boolean D_GrabMouseCallback(void)
     return (gamestate == GS_LEVEL) && !demoplayback && !advancedemo;
 }
 
-void D_DoomLoopIter()
+void D_DoomLoopIter(void)
 {
     if (wipestart > 0)
     {
@@ -525,6 +525,7 @@ void D_DoomLoopIter()
 EMSCRIPTEN_KEEPALIVE
 void D_SetLoopIter()
 {
+    emscripten_cancel_main_loop();
     emscripten_set_main_loop(D_DoomLoopIter, 0, 0);
 }
 
