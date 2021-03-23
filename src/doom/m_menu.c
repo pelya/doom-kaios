@@ -1011,12 +1011,32 @@ void M_MoreEpisodes(int choice)
     {
         downloadFreedoom2Started = true;
 #ifdef EMSCRIPTEN
-        EM_ASM( window.location.assign("https://github.com/pelya/doom-kaios/releases/download/freedoom-0.12.1/freedoom2.wad"); );
+        EM_ASM( window.location.assign('https://github.com/pelya/doom-kaios/releases/download/freedoom-0.12.1/freedoom2.wad'); );
 #endif
     }
     if (choice == more_ep_select_wad)
     {
         //M_SetupNextMenu(&SelectWadDef);
+#ifdef EMSCRIPTEN
+        EM_ASM(
+            var sdcard = navigator.getDeviceStorage('sdcard');
+            var sdcardCursor = sdcard.enumerate('');
+            var sdcardRootdir = [];
+            sdcardCursor.onsuccess = function () {
+            if (!this.done) {
+              if (sdcardCursor.result.name !== null) {
+                Module.print(sdcardCursor.result.name + ' type ' + sdcardCursor.result.type);
+                sdcardRootdir.push(sdcardCursor.result.name);
+                this.continue();
+              };
+            } else {
+            };
+          };
+          sdcardCursor.onerror = function () {
+            Module.print('Cannot read SD card: ' + this.error);
+          };
+        );
+#endif
     }
 }
 
@@ -1126,7 +1146,7 @@ void M_FinishReadThis(int choice)
     M_SetupNextMenu(&MainDef);
 #ifdef EMSCRIPTEN
     // Advertisement is required for KaiStore submission, but I can hide it in the help dialog
-    EM_ASM( if (lastKaiAd !== false) lastKaiAd.call("display"); );
+    EM_ASM( if (lastKaiAd !== false) lastKaiAd.call('display'); );
 #endif
 }
 
@@ -1204,7 +1224,7 @@ void M_QuitDOOM(int choice)
     M_SaveDefaults();
 
     // Force current window to close, this is the only way to clear app state
-    EM_ASM( setTimeout(function() { window.open("", "_self").close(); }, 200); );
+    EM_ASM( setTimeout(function() { window.open('', '_self').close(); }, 200); );
 
     // This code will be never executed
     DEH_snprintf(endstring, sizeof(endstring), "%s\n\n" DOSY,

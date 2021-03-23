@@ -22,7 +22,12 @@
     "name": "pelya",
     "url": "https://github.com/pelya/doom-kaios"
   },
-  "type": "web",
+  "type": "privileged",
+  "permissions": {
+    "device-storage:sdcard": {
+      "access": "readonly"
+    }
+  },
   "fullscreen": "true",
   "categories": [ "games" ],
   "default_locale": "en-US",

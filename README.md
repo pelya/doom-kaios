@@ -87,7 +87,7 @@ Use emscripten_set_main_loop() to call your main loop function after you initial
 
 Use following code to close the app:
 
-    EM_ASM( window.open("", "_self").close(); );
+    EM_ASM( window.open('', '_self').close(); );
 
 if you simply call exit(0) the app won't clear it's state and will show black screen on the next launch
 
@@ -133,4 +133,4 @@ If apps aren't monetized, KaiStore team would mark it a low priority and the QA 
 To show a fullscreen advertisement, add following code to some part of your app,
 it should be accessible from somewhere in the app, like settings dialog:
 
-    EM_ASM( if (lastKaiAd !== false) lastKaiAd.call("display"); );
+    EM_ASM( if (lastKaiAd !== false) lastKaiAd.call('display'); );
