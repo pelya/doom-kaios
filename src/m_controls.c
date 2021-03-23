@@ -26,15 +26,17 @@
 // Keyboard controls
 //
 
-int key_right = KEY_RIGHTARROW;
-int key_left = KEY_LEFTARROW;
+int key_right = '4';
+int key_left = '1';
 
-int key_up = KEY_UPARROW;
-int key_down = KEY_DOWNARROW; 
-int key_strafeleft = ',';
-int key_straferight = '.';
-int key_fire = KEY_RCTRL;
-int key_use = ' ';
+int key_up = '0';
+int key_down = KEYP_MULTIPLY;
+int key_strafeleft = '2';
+int key_straferight = '5';
+int key_fire = '7';
+int key_fire_alt = '8'; // Alternative Fire key
+int key_fire_dup = '9'; // Duplicate Fire key
+int key_use = KEYP_DIVIDE;
 int key_strafe = KEY_RALT;
 int key_speed = KEY_RSHIFT; 
 
@@ -78,11 +80,11 @@ int key_arti_invulnerability = '5';
 // Note: Strife also uses key_invleft, key_invright, key_jump, key_lookup, and
 // key_lookdown, but with different default values.
 
-int key_usehealth = 'h';
-int key_invquery  = 'q';
-int key_mission   = 'w';
-int key_invpop    = 'z';
-int key_invkey    = 'k';
+int key_usehealth = 'q';
+int key_invquery  = 'w';
+int key_mission   = 'e';
+int key_invpop    = 'r';
+int key_invkey    = 't';
 int key_invhome   = KEY_HOME;
 int key_invend    = KEY_END;
 int key_invuse    = KEY_ENTER;
@@ -108,7 +110,7 @@ int mousebprevweapon = -1;
 int mousebnextweapon = -1;
 
 
-int key_message_refresh = KEY_ENTER;
+int key_message_refresh = KEY_F12;
 int key_pause = KEY_PAUSE;
 int key_demo_quit = 'q';
 int key_spy = KEY_F12;
@@ -120,43 +122,43 @@ int key_multi_msgplayer[8];
 
 // Weapon selection keys:
 
-int key_weapon1 = '1';
-int key_weapon2 = '2';
-int key_weapon3 = '3';
-int key_weapon4 = '4';
-int key_weapon5 = '5';
-int key_weapon6 = '6';
-int key_weapon7 = '7';
-int key_weapon8 = '8';
-int key_prevweapon = '9';
-int key_nextweapon = '0';
+int key_weapon1 = 'a';
+int key_weapon2 = 's';
+int key_weapon3 = 'd';
+int key_weapon4 = 'f';
+int key_weapon5 = 'g';
+int key_weapon6 = 'h';
+int key_weapon7 = 'j';
+int key_weapon8 = 'k';
+int key_prevweapon = '3';
+int key_nextweapon = '6';
 
 // Map control keys:
 
-int key_map_north     = KEY_UPARROW;
-int key_map_south     = KEY_DOWNARROW;
-int key_map_east      = KEY_RIGHTARROW;
-int key_map_west      = KEY_LEFTARROW;
-int key_map_zoomin    = '=';
-int key_map_zoomout   = '-';
-int key_map_toggle    = KEY_TAB;
-int key_map_maxzoom   = '0';
-int key_map_follow    = 'f';
-int key_map_grid      = 'g';
-int key_map_mark      = 'm';
-int key_map_clearmark = 'c';
+int key_map_north     = KEY_RIGHTARROW;
+int key_map_south     = KEY_LEFTARROW;
+int key_map_east      = KEY_DOWNARROW;
+int key_map_west      = KEY_UPARROW;
+int key_map_zoomin    = '3';
+int key_map_zoomout   = '6';
+int key_map_toggle    = KEY_ENTER;
+int key_map_maxzoom   = 'z';
+int key_map_follow    = '7';
+int key_map_grid      = 'c';
+int key_map_mark      = '8';
+int key_map_clearmark = '9';
 
 // menu keys:
 
-int key_menu_activate  = KEY_BACKSPACE;
-int key_menu_up        = KEY_UPARROW;
-int key_menu_down      = KEY_DOWNARROW;
-int key_menu_left      = KEY_LEFTARROW;
-int key_menu_right     = KEY_RIGHTARROW;
-int key_menu_back      = KEY_ESCAPE;
+int key_menu_activate  = KEY_ESCAPE;
+int key_menu_up        = KEY_RIGHTARROW;
+int key_menu_down      = KEY_LEFTARROW;
+int key_menu_left      = KEY_UPARROW;
+int key_menu_right     = KEY_DOWNARROW;
+int key_menu_back      = KEY_BACKSPACE;
 int key_menu_forward   = KEY_ENTER;
 int key_menu_confirm   = 'y';
-int key_menu_abort     = 'n';
+int key_menu_abort     = KEY_BACKSPACE;
 
 int key_menu_help      = KEY_F1;
 int key_menu_save      = KEY_F2;
@@ -170,7 +172,7 @@ int key_menu_qload     = KEY_F9;
 int key_menu_quit      = KEY_F10;
 int key_menu_gamma     = KEY_F11;
 
-int key_menu_incscreen = KEY_EQUALS;
+int key_menu_incscreen = KEYP_ENTER;
 int key_menu_decscreen = KEY_MINUS;
 int key_menu_screenshot = 0;
 
@@ -212,6 +214,8 @@ void M_BindBaseControls(void)
     M_BindIntVariable("key_strafeleft",     &key_strafeleft);
     M_BindIntVariable("key_straferight",    &key_straferight);
     M_BindIntVariable("key_fire",           &key_fire);
+    M_BindIntVariable("key_fire_alt",       &key_fire_alt);
+    M_BindIntVariable("key_fire_dup",       &key_fire_dup);
     M_BindIntVariable("key_use",            &key_use);
     M_BindIntVariable("key_strafe",         &key_strafe);
     M_BindIntVariable("key_speed",          &key_speed);

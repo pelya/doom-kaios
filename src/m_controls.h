@@ -25,6 +25,8 @@ extern int key_down;
 extern int key_strafeleft;
 extern int key_straferight;
 extern int key_fire;
+extern int key_fire_alt;
+extern int key_fire_dup;
 extern int key_use;
 extern int key_strafe;
 extern int key_speed;

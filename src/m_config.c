@@ -393,6 +393,18 @@ static default_t	doom_defaults_list[] =
     CONFIG_VARIABLE_KEY(key_fire),
 
     //!
+    // Alternative Fire key
+    //
+
+    CONFIG_VARIABLE_KEY(key_fire_alt),
+
+    //!
+    // Duplicate Fire key
+    //
+
+    CONFIG_VARIABLE_KEY(key_fire_dup),
+
+    //!
     // Keyboard key to "use" an object, eg. a door or switch.
     //
 

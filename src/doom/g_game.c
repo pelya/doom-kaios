@@ -438,8 +438,9 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
     // buttons
     cmd->chatchar = HU_dequeueChatChar(); 
  
-    if (gamekeydown[key_fire] || mousebuttons[mousebfire] 
-	|| joybuttons[joybfire]) 
+    if (gamekeydown[key_fire] || mousebuttons[mousebfire]
+	|| joybuttons[joybfire] 
+	|| gamekeydown[key_fire_alt] || gamekeydown[key_fire_dup])
 	cmd->buttons |= BT_ATTACK; 
  
     if (gamekeydown[key_use]

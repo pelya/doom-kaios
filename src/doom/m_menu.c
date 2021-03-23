@@ -774,8 +774,10 @@ void M_QuickLoad(void)
 	M_StartMessage(DEH_String(QSAVESPOT),NULL,false);
 	return;
     }
-    DEH_snprintf(tempstring, 80, QLPROMPT, savegamestrings[quickSaveSlot]);
-    M_StartMessage(tempstring,M_QuickLoadResponse,true);
+    //DEH_snprintf(tempstring, 80, QLPROMPT, savegamestrings[quickSaveSlot]);
+    //M_StartMessage(tempstring,M_QuickLoadResponse,true);
+    M_LoadSelect(quickSaveSlot);
+    S_StartSound(NULL,sfx_swtchx);
 }
 
 
@@ -1196,6 +1198,11 @@ void M_SizeDisplay(int choice)
 	{
 	    screenblocks++;
 	    screenSize++;
+	}
+	else if (screenSize > 0)
+	{
+	    screenblocks--;
+	    screenSize--;
 	}
 	break;
     }
