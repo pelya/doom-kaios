@@ -28,7 +28,15 @@
 
     <script type='text/javascript'>
       var sys_fs_init_is_done = 0; // Used from C code
+      var debug = 0;
       var outputElement = document.getElementById('output');
+
+      if (debug) {
+        document.getElementById('canvas').style.height = "65%";
+      } else {
+        outputElement.hidden = true;
+        outputElement.style.display = "none";
+      }
 
       var Module = {
         preRun: [],
@@ -38,8 +46,8 @@
           if (outputElement) outputElement.value = ''; // clear browser cache
           return function(text) {
             if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-            console.log(text);
-            if (outputElement) {
+            if (outputElement && !outputElement.hidden) {
+              console.log(text);
               outputElement.value = text + '\n' + outputElement.value;
             }
           };
@@ -47,6 +55,7 @@
         printErr: function(text) {
           if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
           console.error(text);
+          Module.print(text);
         },
         canvas: (function() {
           var canvas = document.getElementById('canvas');
@@ -68,11 +77,6 @@
           Module.setStatus.last.text = text;
           if (m) {
             text = m[1];
-          } else {
-            if (!text) {
-              outputElement.hidden = true;
-              outputElement.style.display = "none";
-            }
           }
         },
         totalDependencies: 0,
