@@ -177,6 +177,7 @@ static grabmouse_callback_t grabmouse_callback = NULL;
 // Does the window currently have focus?
 
 static boolean window_focused = true;
+static boolean window_visible = true;
 
 // Window resize state.
 
@@ -318,6 +319,14 @@ static void HandleWindowEvent(SDL_WindowEvent *event)
             window_focused = false;
             break;
 
+        case SDL_WINDOWEVENT_SHOWN:
+            window_visible = true;
+            break;
+
+        case SDL_WINDOWEVENT_HIDDEN:
+            window_visible = false;
+            break;
+
         // We want to save the user's preferred monitor to use for running the
         // game, so that next time we're run we start on the same display. So
         // every time the window is moved, find which display we're now on and
@@ -333,6 +342,15 @@ static void HandleWindowEvent(SDL_WindowEvent *event)
 
         default:
             break;
+    }
+
+    if (window_focused && window_visible)
+    {
+        SDL_PauseAudio(0);
+    }
+    else
+    {
+        SDL_PauseAudio(1);
     }
 }
 
