@@ -98,6 +98,17 @@ First call sys_fs_init() from your init code.
 Then check for sys_fs_init_is_done() to return 1 in a loop, before reading or writing any files inside FS_WRITE_MOUNT_POINT.
 Call sys_fs_sync() after writing any files, to push data to filesystem database.
 
+The app must mute any music or audio when the phone is closed or when the screen is dimmed.
+The app will receive SDL_WINDOWEVENT notifications from SDL. Whenever the app receives events
+
+    if (event.type == SDL_WINDOWEVENT && (
+        event.window.event == SDL_WINDOWEVENT_FOCUS_LOST ||
+        event.window.event == SDL_WINDOWEVENT_HIDDEN))
+
+it must mute the audio using SDL_PauseAudioDevice(audiodevice, 1); call.
+The app can unmute the audio only after receiving both events
+SDL_WINDOWEVENT_SHOWN and SDL_WINDOWEVENT_FOCUS_GAINED.
+
 To debug your code on the device, compile the app using the script build-debug.sh,
 then you can use printf() in the code to write debug messages to the text area on the screen
 
