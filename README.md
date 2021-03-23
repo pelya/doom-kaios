@@ -85,7 +85,10 @@ With Emscripten, your main loop should not block anywhere - do not call sleep() 
 
 Use emscripten_set_main_loop() to call your main loop function after you initialized video and everything else
 
-Use emscripten_cancel_main_loop() and EM_ASM( window.open("", "_self").close(); ); to exit the app,
+Use following code to close the app:
+
+    EM_ASM( window.open("", "_self").close(); );
+
 if you simply call exit(0) the app won't clear it's state and will show black screen on the next launch
 
 To write data to files that will not be deleted after you close the app, you have to mount a writable file system,
@@ -114,6 +117,9 @@ KaiOS Store does provide app updates, however it would require user interaction.
 The KaiAds is deeply integrated to the KaiStore, the app analytics is part of the KaiAds SDK
 and developers need to go to KaiAds page to access the app install and usage statistics.
 
-If apps aren't monetized, Store team would mark it a low priority and the app will be on the bottom of the KaiStore category.
+If apps aren't monetized, KaiStore team would mark it a low priority and the QA might be delayed.
 
-In XRick, KaiAds are used only to monitor app install numbers, the ad is never shown during the game.
+To show a fullscreen advertisement, add following code to some part of your app,
+it should be accessible from somewhere in the app, like settings dialog:
+
+    EM_ASM( if (lastKaiAd !== false) lastKaiAd.call("display"); );
