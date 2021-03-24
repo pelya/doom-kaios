@@ -25,6 +25,8 @@
   "origin": "app://freedoom",
   "type": "privileged",
   "permissions": {
+    "mobiledata":{},
+    "wifidata":{},
     "device-storage:sdcard": {
       "description": "Read .WAD file from SD card",
       "access": "readonly"
