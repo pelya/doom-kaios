@@ -23,7 +23,7 @@
     "url": "https://github.com/pelya/doom-kaios"
   },
   "origin": "app://freedoom",
-  "type": "privileged",
+  "type": "web",
   "permissions": {
     "mobiledata":{},
     "wifidata":{},
