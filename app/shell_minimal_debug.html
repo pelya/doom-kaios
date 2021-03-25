@@ -41,6 +41,7 @@
       var Module = {
         preRun: [],
         postRun: [],
+
         print: (function() {
           var outputElement = document.getElementById('output');
           if (outputElement) outputElement.value = ''; // clear browser cache
@@ -52,11 +53,13 @@
             }
           };
         })(),
+
         printErr: function(text) {
           if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
           console.error(text);
           Module.print(text);
         },
+
         canvas: (function() {
           var canvas = document.getElementById('canvas');
 
@@ -67,6 +70,7 @@
 
           return canvas;
         })(),
+
         setStatus: function(text) {
           if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
           if (text === Module.setStatus.last.text) return;
@@ -79,24 +83,46 @@
             text = m[1];
           }
         },
+
         totalDependencies: 0,
+
         monitorRunDependencies: function(left) {
           this.totalDependencies = Math.max(this.totalDependencies, left);
           Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
         }
       };
+
       Module.setStatus('Downloading...');
+
       window.onerror = function() {
         Module.setStatus('Exception thrown, see JavaScript console');
         Module.setStatus = function(text) {
           if (text) Module.printErr('[post-exception status] ' + text);
         };
       };
+
       // Auto-hide splash image after 3 seconds
       setTimeout(function() {
         document.getElementById("splash").style.display = "none";
         document.getElementById("splashText").style.display = "none";
       }, 4000);
+
+      // Copy WAD file from SD card into emscripten idb filesystem
+      var sys_open_wad_file_name = null;
+      var sys_open_wad_file_blob = null;
+
+      navigator.mozSetMessageHandler('activity', function(activityRequest) {
+        Module.print("Received activity request: " + activityRequest.source.name);
+        if (activityRequest.source.name === "open") {
+          Module.print("Loading WAD file from SD card and saving it to idbfs");
+        } else {
+          Module.print("Received unknown activity request");
+          return;
+        }
+
+        sys_open_wad_file_name = activityRequest.source.data.filename;
+        sys_open_wad_file_blob = activityRequest.source.data.blob;
+      }
     </script>
     {{{ SCRIPT }}}
     <script src="kaiads.v4.min.js"></script>

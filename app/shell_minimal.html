@@ -10,7 +10,7 @@
       .emscripten { display: block; }
       /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
       canvas.emscripten { border: 0px none; background-color: black; display: block; position: absolute; width:100%; height:100%; left: 0; top: 0; object-fit: fill; z-index: 1; }
-      textarea.emscripten { font-size: 8px; line-height: 1; color: yellow; background-color: black; position: absolute; width: 100%; height: 35%; bottom: 0; left: 0; z-index: 10; }
+      textarea.emscripten { font-size: 5%; line-height: 1; color: yellow; background-color: black; position: absolute; width: 100%; height: 35%; bottom: 0; left: 0; z-index: 10; }
       img.splash { width: 100%; height: 85%; top: 0; object-fit: fill; position: absolute; z-index: 3; }
       div.splash { width: 100%; height: 15%; bottom: 0; text-align: center; align-items: center; justify-content: center; background-color: #FFFFFF; position: absolute; z-index: 3; }
     </style>
@@ -41,6 +41,7 @@
       var Module = {
         preRun: [],
         postRun: [],
+
         print: (function() {
           var outputElement = document.getElementById('output');
           if (outputElement) outputElement.value = ''; // clear browser cache
@@ -52,11 +53,13 @@
             }
           };
         })(),
+
         printErr: function(text) {
           if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
           console.error(text);
           Module.print(text);
         },
+
         canvas: (function() {
           var canvas = document.getElementById('canvas');
 
@@ -67,6 +70,7 @@
 
           return canvas;
         })(),
+
         setStatus: function(text) {
           if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
           if (text === Module.setStatus.last.text) return;
@@ -79,24 +83,46 @@
             text = m[1];
           }
         },
+
         totalDependencies: 0,
+
         monitorRunDependencies: function(left) {
           this.totalDependencies = Math.max(this.totalDependencies, left);
           Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
         }
       };
+
       Module.setStatus('Downloading...');
+
       window.onerror = function() {
         Module.setStatus('Exception thrown, see JavaScript console');
         Module.setStatus = function(text) {
           if (text) Module.printErr('[post-exception status] ' + text);
         };
       };
+
       // Auto-hide splash image after 3 seconds
       setTimeout(function() {
         document.getElementById("splash").style.display = "none";
         document.getElementById("splashText").style.display = "none";
       }, 4000);
+
+      // Copy WAD file from SD card into emscripten idb filesystem
+      var sys_open_wad_file_name = null;
+      var sys_open_wad_file_blob = null;
+
+      navigator.mozSetMessageHandler('activity', function(activityRequest) {
+        Module.print("Received activity request: " + activityRequest.source.name);
+        if (activityRequest.source.name === "open") {
+          Module.print("Loading WAD file from SD card and saving it to idbfs");
+        } else {
+          Module.print("Received unknown activity request");
+          return;
+        }
+
+        sys_open_wad_file_name = activityRequest.source.data.filename;
+        sys_open_wad_file_blob = activityRequest.source.data.blob;
+      }
     </script>
     {{{ SCRIPT }}}
     <script src="kaiads.v4.min.js"></script>

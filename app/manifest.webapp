@@ -26,11 +26,25 @@
   "type": "web",
   "permissions": {
     "mobiledata":{},
-    "wifidata":{},
+    "wifidata":{}
   },
   "fullscreen": "true",
   "categories": [ "games" ],
   "default_locale": "en-US",
   "orientation": [ "landscape-primary" ],
-  "precompile": [ "doom.js" ]
+  "precompile": [ "doom.js" ],
+  "activities": {
+    "open": {
+      "href": "/doom.html",
+      "filters": {
+        "type": "application/octet-stream",
+        "url": {
+          "required": true,
+          "pattern": "^.*\\.wad$",
+          "patternFlags": "i"
+        }
+      },
+      "returnValue": false
+    }
+  }
 }
