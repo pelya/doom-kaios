@@ -10,7 +10,7 @@
       .emscripten { display: block; }
       /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
       canvas.emscripten { border: 0px none; background-color: black; display: block; position: absolute; width:100%; height:100%; left: 0; top: 0; object-fit: fill; z-index: 1; }
-      textarea.emscripten { font-size: 5%; line-height: 1; color: yellow; background-color: black; position: absolute; width: 100%; height: 35%; bottom: 0; left: 0; z-index: 10; }
+      textarea.emscripten { font-size: 10%; line-height: 1; color: yellow; background-color: black; position: absolute; width: 100%; height: 35%; bottom: 0; left: 0; z-index: 10; }
       img.splash { width: 100%; height: 85%; top: 0; object-fit: fill; position: absolute; z-index: 3; }
       div.splash { width: 100%; height: 15%; bottom: 0; text-align: center; align-items: center; justify-content: center; background-color: #FFFFFF; position: absolute; z-index: 3; }
     </style>
@@ -28,10 +28,12 @@
 
     <script type='text/javascript'>
       var sys_fs_init_is_done = 0; // Used from C code
-      var debug = 1;
+      var sys_open_wad_file_name = null; // Copy WAD file from SD card into emscripten idb filesystem
+      var sys_open_wad_file_blob = null;
       var outputElement = document.getElementById('output');
+      var sys_debug = 1;
 
-      if (debug) {
+      if (sys_debug) {
         document.getElementById('canvas').style.height = "65%";
       } else {
         outputElement.hidden = true;
@@ -107,22 +109,20 @@
         document.getElementById("splashText").style.display = "none";
       }, 4000);
 
-      // Copy WAD file from SD card into emscripten idb filesystem
-      var sys_open_wad_file_name = null;
-      var sys_open_wad_file_blob = null;
-
       navigator.mozSetMessageHandler('activity', function(activityRequest) {
         Module.print("Received activity request: " + activityRequest.source.name);
         if (activityRequest.source.name === "open") {
           Module.print("Loading WAD file from SD card and saving it to idbfs");
+          sys_open_wad_file_name = activityRequest.source.data.filename;
+          sys_open_wad_file_blob = activityRequest.source.data.blob;
+        } else if (activityRequest.source.name === "share") {
+          Module.print("Loading WAD file from SD card and saving it to idbfs");
+          sys_open_wad_file_name = activityRequest.source.data.filenames[0];
+          sys_open_wad_file_blob = activityRequest.source.data.blobs[0];
         } else {
           Module.print("Received unknown activity request");
-          return;
         }
-
-        sys_open_wad_file_name = activityRequest.source.data.filename;
-        sys_open_wad_file_blob = activityRequest.source.data.blob;
-      }
+      });
     </script>
     {{{ SCRIPT }}}
     <script src="kaiads.v4.min.js"></script>

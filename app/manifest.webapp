@@ -37,12 +37,24 @@
     "open": {
       "href": "/doom.html",
       "filters": {
-        "type": "application/octet-stream",
-        "url": {
+        "blob": {
+          "required": true
+        },
+        "filename": {
           "required": true,
           "pattern": "^.*\\.wad$",
           "patternFlags": "i"
         }
+      },
+      "returnValue": false
+    },
+    "share": {
+      "href": "/doom.html",
+      "blobs": {
+        "required": true
+      },
+      "filenames": {
+        "required": true
       },
       "returnValue": false
     }
