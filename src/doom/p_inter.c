@@ -719,11 +719,6 @@ P_KillMobj
 		i++;
 	}
 
-	const char *s = HU_GetMapName();
-	EM_ASM_({
-        document.dispatchEvent(new CustomEvent("P_KillMobj", { detail: { mapname: Module.UTF8ToString($0), source: Module.UTF8ToString($1) } }));
-    }, s, t);
-
 	P_DropWeapon (target->player);
 
 	if (target->player == &players[consoleplayer]

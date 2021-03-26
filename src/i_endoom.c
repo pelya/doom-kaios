@@ -58,18 +58,8 @@ void I_Endoom(byte *endoom_data)
 
     TXT_UpdateScreen();
 
-    EM_ASM(
-        if (Module && Module.canvas && typeof Module.canvas.calcRatio == "function"){
-            Module.canvas.calcRatio(true);
-        }
-    );
-
     // Shut down text mode screen
 
     TXT_Shutdown();
-
-    EM_ASM(
-        document.dispatchEvent(new CustomEvent("I_Endoom", { detail: {} }));
-    );
 }
 

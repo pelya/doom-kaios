@@ -175,10 +175,11 @@ boolean W_ParseCommandLine(void)
     {
 	// the parms after p are wadfile/lump names,
 	// until end of parms or another - preceded parm
-	modifiedgame = true;            // homebrew levels
-	while (++p != myargc && myargv[p][0] != '-')
+	while (++p != myargc && myargv[p][0] != 0 && myargv[p][0] != '-')
         {
             char *filename;
+
+            modifiedgame = true;            // homebrew levels
 
             filename = D_TryFindWADByName(myargv[p]);
 

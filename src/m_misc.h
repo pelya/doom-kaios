@@ -58,8 +58,9 @@ char *M_OEMToUTF8(const char *ansi);
 #endif
 
 extern void sys_fs_init(void);
-extern int sys_fs_init_is_done(void);
+extern int sys_fs_init_get_done(void);
 extern void sys_fs_sync(void);
+extern int sys_fs_sync_get_done(void);
 
 #endif
 

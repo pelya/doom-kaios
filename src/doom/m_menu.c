@@ -100,8 +100,6 @@ int			messageLastMenuActive;
 // timed message = no input from user
 boolean			messageNeedsInput;
 
-boolean		downloadFreedoom2Started = false;
-
 void    (*messageRoutine)(int response);
 
 char gammamsg[5][26] =
@@ -183,6 +181,7 @@ menu_t*	currentMenu;
 static void M_NewGame(int choice);
 static void M_Episode(int choice);
 static void M_MoreEpisodes(int choice);
+static void M_LoadingWad(int choice);
 static void M_ChooseSkill(int choice);
 static void M_LoadGame(int choice);
 static void M_SaveGame(int choice);
@@ -213,6 +212,7 @@ static void M_DrawReadThis2(void);
 static void M_DrawNewGame(void);
 static void M_DrawEpisode(void);
 static void M_DrawMoreEpisodes(void);
+static void M_DrawLoadingWad(void);
 static void M_DrawOptions(void);
 static void M_DrawSound(void);
 static void M_DrawLoad(void);
@@ -301,7 +301,8 @@ menu_t  EpiDef =
 enum
 {
     more_ep_download_freedoom2,
-    more_ep_select_wad,
+    more_ep_select_iwad,
+    more_ep_select_pwad,
     more_ep_end
 } more_episodes_e;
 
@@ -309,6 +310,7 @@ menuitem_t MoreEpisodesMenu[]=
 {
     {1,"", M_MoreEpisodes,'k'},
     {1,"", M_MoreEpisodes,'t'},
+    {1,"", M_MoreEpisodes,'l'},
 };
 
 menu_t MoreEpisodesDef =
@@ -319,6 +321,29 @@ menu_t MoreEpisodesDef =
     M_DrawMoreEpisodes,	// drawing routine ->
     48,63,				// x,y
     more_ep_download_freedoom2	// lastOn
+};
+
+enum
+{
+    loading_wad_switch_new,
+    loading_wad_keep_current,
+    loading_wad_end
+} loading_wad_e;
+
+menuitem_t LoadingWadMenu[]=
+{
+    {1,"", M_LoadingWad,'k'},
+    {1,"", M_LoadingWad,'t'},
+};
+
+menu_t LoadingWadDef =
+{
+    loading_wad_end,		// # of menu items
+    &EpiDef,				// previous menu
+    LoadingWadMenu,			// menuitem_t ->
+    M_DrawLoadingWad,		// drawing routine ->
+    48,63,					// x,y
+    loading_wad_switch_new	// lastOn
 };
 
 //
@@ -951,7 +976,7 @@ int     epi;
 void M_DrawEpisode(void)
 {
     V_DrawPatchDirect(54, 38, W_CacheLumpName(DEH_String("M_EPISOD"), PU_CACHE));
-    M_WriteText(48, 38 + LINEHEIGHT * 6, "MORE EPISODES");
+    M_WriteText(48, 36 + LINEHEIGHT * 6, "MORE EPISODES");
 }
 
 void M_VerifyNightmare(int key)
@@ -995,48 +1020,200 @@ void M_Episode(int choice)
     M_SetupNextMenu(&NewDef);
 }
 
+//
+//      M_MoreEpisodes
+//
+
+boolean downloadFreedoom2Started = false;
+
 void M_DrawMoreEpisodes(void)
 {
-    M_WriteText(48, 38, "MORE EPISODES");
-    M_WriteText(48, 38 + LINEHEIGHT * 2,
+    M_WriteText(48, 36, "MORE EPISODES");
+    M_WriteText(48, 36 + LINEHEIGHT * 2,
                 downloadFreedoom2Started ?
-                "DOWNLOAD IN PROGRESS" : "DOWNLOAD FREEDOOM2.WAD");
-    M_WriteText(48, 38 + LINEHEIGHT * 3, "SELECT .WAD FROM SD CARD");
+                "OPEN FREEDOOM2.WAD IN DOWNLOADS" :
+                "DOWNLOAD FREEDOOM2.WAD");
+    M_WriteText(48, 36 + LINEHEIGHT * 3, "SELECT GAME WAD");
+    M_WriteText(48, 36 + LINEHEIGHT * 4, "SELECT MAP PACK WAD");
+    M_WriteText(48, 36 + LINEHEIGHT * 6, "SELECT MAP PACK WAD");
+
+    int wadAvailable = EM_ASM_INT( return sys_is_wad_file_available(); );
+    if (wadAvailable)
+    {
+        M_SetupNextMenu(&LoadingWadDef);
+    }
 }
 
 void M_MoreEpisodes(int choice)
 {
-    printf("M_MoreEpisodes %d\n", choice);
-    if (choice == more_ep_download_freedoom2 && !downloadFreedoom2Started)
+    S_StartSound(NULL,sfx_swtchn);
+    if (choice == more_ep_download_freedoom2)
     {
-        downloadFreedoom2Started = true;
-#ifdef EMSCRIPTEN
-        EM_ASM( window.location.assign('https://github.com/pelya/doom-kaios/releases/download/freedoom-0.12.1/freedoom2.wad'); );
-#endif
+        if (!downloadFreedoom2Started)
+        {
+            downloadFreedoom2Started = true;
+            EM_ASM( window.location.assign('https://github.com/pelya/doom-kaios/releases/download/freedoom-0.12.1/freedoom2.wad'); );
+        }
+        else
+        {
+            EM_ASM( sys_launch_downloads_file_picker(); );
+        }
     }
-    if (choice == more_ep_select_wad)
+    if (choice == more_ep_select_iwad)
     {
         //M_SetupNextMenu(&SelectWadDef);
-#ifdef EMSCRIPTEN
-        EM_ASM(
-            var sdcard = navigator.getDeviceStorage('sdcard');
-            var sdcardCursor = sdcard.enumerate('');
-            var sdcardRootdir = [];
-            sdcardCursor.onsuccess = function () {
-            if (!this.done) {
-              if (sdcardCursor.result.name !== null) {
-                Module.print(sdcardCursor.result.name + ' type ' + sdcardCursor.result.type);
-                sdcardRootdir.push(sdcardCursor.result.name);
-                this.continue();
-              };
-            } else {
-            };
-          };
-          sdcardCursor.onerror = function () {
-            Module.print('Cannot read SD card: ' + this.error);
-          };
-        );
-#endif
+    }
+    if (choice == more_ep_select_pwad)
+    {
+        //M_SetupNextMenu(&SelectWadDef);
+    }
+}
+
+//
+//      M_LoadingWad
+//
+
+int loadingWadFinished = false;
+char loadingWadFilename[FILENAME_LIMIT] = "";
+boolean loadingWadReboot = false;
+
+void M_DrawLoadingWad(void)
+{
+    static FILE * saveFile = NULL;
+    static int totalLength = 100;
+    static int writtenLength = 0;
+    boolean unsupportedFormat = false;
+    int i;
+
+    if (!loadingWadFinished)
+    {
+        if (!saveFile)
+        {
+            totalLength = EM_ASM_INT({ return sys_open_wad_file_blob.size; });
+
+            EM_ASM({
+                stringToUTF8(sys_open_wad_file_name, $0, lengthBytesUTF8(sys_open_wad_file_name) + 1);
+            }, loadingWadFilename);
+
+            for (i = 0; i < FILENAME_LIMIT; i++)
+            {
+                loadingWadFilename[i] = toupper(loadingWadFilename[i]);
+            }
+            if (strlen(loadingWadFilename) < 4 ||
+                memcmp(loadingWadFilename + strlen(loadingWadFilename) - 4, ".WAD", 4) != 0)
+            {
+                unsupportedFormat = true;
+            }
+            else
+            {
+                char savePath[64 + 10] = "";
+                M_snprintf(savePath, sizeof(savePath), "%s/%s",
+                    FS_WRITE_MOUNT_POINT, loadingWadFilename);
+                DEH_printf("Saving WAD to: %s", savePath);
+                saveFile = fopen(savePath, "wb");
+                if (saveFile == NULL)
+                {
+                    DEH_printf("Cannot create file: %s", savePath);
+                    loadingWadFinished = true;
+                    loadingWadFilename[0] = 0;
+                }
+            }
+        }
+        if (saveFile)
+        {
+            if (writtenLength < totalLength)
+            {
+                enum { FILE_CHUNK_SIZE = 256000 };
+                int count = MIN(totalLength - writtenLength, FILE_CHUNK_SIZE);
+                unsigned char *dataPtr = (unsigned char *) EM_ASM_INT({
+                    return sys_copy_wad_file_data($0, $1);
+                }, writtenLength, writtenLength + count);
+                if (dataPtr != NULL)
+                {
+                    fwrite(dataPtr, 1, count, saveFile);
+                    free(dataPtr);
+                    writtenLength += count;
+                }
+            }
+            if (writtenLength >= totalLength)
+            {
+                fclose(saveFile);
+                sys_fs_sync();
+                saveFile = NULL;
+                loadingWadFinished = true;
+                EM_ASM( sys_free_wad_file_data(); );
+            }
+        }
+    }
+
+    if (loadingWadFinished && loadingWadReboot && sys_fs_sync_get_done())
+    {
+        // Reload using new config
+        EM_ASM( location.reload(); );
+    }
+
+    char text[FILENAME_LIMIT + 20] = "";
+    M_snprintf(text, sizeof(text), "IMPORTING %s %s", loadingWadFilename, loadingWadFinished ? "DONE" : "");
+    M_WriteText(48, 36, text);
+    M_snprintf(text, sizeof(text), "%d%% DONE", writtenLength * 100 / totalLength);
+    if (loadingWadFinished)
+    {
+        M_snprintf(text, sizeof(text), "OPEN %s", loadingWadFilename);
+    }
+    if (unsupportedFormat)
+    {
+        M_snprintf(text, sizeof(text), "ERROR: ONLY .WAD FILES ARE SUPPORTED");
+    }
+    M_WriteText(48, 36 + LINEHEIGHT * 2, text);
+    M_WriteText(48, 36 + LINEHEIGHT * 3, "CANCEL");
+}
+
+void M_LoadingWad(int choice)
+{
+    if (choice == loading_wad_switch_new)
+    {
+        if (loadingWadFinished)
+        {
+            S_StartSound(NULL,sfx_swtchn);
+            char wadHeader[4] = "";
+            char wadPath[64 + 10] = "";
+            M_snprintf(wadPath, sizeof(wadPath), "%s/%s", FS_WRITE_MOUNT_POINT, loadingWadFilename);
+            FILE *wadFile = fopen(wadPath, "rb");
+            if (wadFile == NULL)
+            {
+                return;
+            }
+            fread(wadHeader, 1, 4, wadFile);
+            fclose(wadFile);
+            if (memcmp(wadHeader, "IWAD", 4) == 0)
+            {
+                memcpy(cmdline_iwad, loadingWadFilename, FILENAME_LIMIT);
+            }
+            if (memcmp(wadHeader, "PWAD", 4) == 0)
+            {
+                memcpy(cmdline_pwad, loadingWadFilename, FILENAME_LIMIT);
+            }
+            FILE *wadsCfg = fopen(WADS_CONFIG_PATH, "wb");
+            if (wadsCfg == NULL)
+            {
+                return;
+            }
+            fwrite(cmdline_iwad, 1, FILENAME_LIMIT, wadsCfg);
+            fwrite(cmdline_pwad, 1, FILENAME_LIMIT, wadsCfg);
+            fclose(wadsCfg);
+            sys_fs_sync();
+            loadingWadReboot = true;
+        }
+        else
+        {
+            S_StartSound(NULL,sfx_noway);
+        }
+    }
+    if (choice == loading_wad_keep_current)
+    {
+        S_StartSound(NULL,sfx_swtchn);
+        EM_ASM( sys_free_wad_file_data(); );
+        M_SetupNextMenu(&MainDef);
     }
 }
 
@@ -1184,6 +1361,12 @@ int     quitsounds2[8] =
 
 void M_QuitResponse(int key)
 {
+    if (sys_fs_sync_get_done())
+    {
+        // Force current window to close, this is the only way to clear app state
+        EM_ASM( window.open('', '_self').close(); );
+    }
+
     if (key != key_menu_confirm && key != key_menu_forward)
 	return;
     if (!netgame)
@@ -1222,9 +1405,6 @@ static char *M_SelectEndMessage(void)
 void M_QuitDOOM(int choice)
 {
     M_SaveDefaults();
-
-    // Force current window to close, this is the only way to clear app state
-    EM_ASM( setTimeout(function() { window.open('', '_self').close(); }, 200); );
 
     // This code will be never executed
     DEH_snprintf(endstring, sizeof(endstring), "%s\n\n" DOSY,
@@ -2209,5 +2389,12 @@ void M_Init (void)
     }
 
     opldev = M_CheckParm("-opldev") > 0;
+
+    int wadAvailable = EM_ASM_INT( return sys_is_wad_file_available(); );
+    if (wadAvailable)
+    {
+        menuactive = 1;
+        M_SetupNextMenu(&LoadingWadDef);
+    }
 }
 

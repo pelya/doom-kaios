@@ -33,7 +33,7 @@ set_target_properties(doom PROPERTIES SUFFIX .html)
 target_link_libraries(doom idbfs.js)
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
-    set(CMAKE_C_FLAGS_DEBUG "-s ASSERTIONS=2 -O2 -DSHOW_FPS=1")
+    set(CMAKE_C_FLAGS_DEBUG "-s ASSERTIONS=2 -O2")
     target_link_libraries(doom -O2 --shell-file=${CMAKE_CURRENT_LIST_DIR}/app/shell_minimal_debug.html)
 else()
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s ASSERTIONS=0 -flto -O3")

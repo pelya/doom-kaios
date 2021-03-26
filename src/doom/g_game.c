@@ -681,12 +681,6 @@ void G_DoLoadLevel (void)
     {
         players[consoleplayer].message = "Press escape to quit.";
     }
-
-    const char *s = HU_GetMapName();
-
-    EM_ASM_({
-        document.dispatchEvent(new CustomEvent("G_DoLoadLevel", { detail: { mapname: Module.UTF8ToString($0) } }));
-    }, s);
 } 
 
 static void SetJoyButtons(unsigned int buttons_mask)
@@ -1537,32 +1531,6 @@ void G_DoCompleted (void)
     StatCopy(&wminfo);
  
     WI_Start (&wminfo); 
-
-    const char *s = HU_GetMapName();
-
-    EM_ASM_({
-        var maxkills = $1;
-        var maxitems = $2;
-        var maxsecret = $3;
-        var partime = $4;
-        var killcount = $5;
-        var itemcount = $6;
-        var secretcount = $7;
-        var leveltime = $8;
-        document.dispatchEvent(new CustomEvent("G_DoCompleted", {
-            detail: {
-                mapname: Module.UTF8ToString($0),
-                maxkills: maxkills,
-                maxitems: maxitems,
-                maxsecret: maxsecret,
-                partime: partime / 35,
-                killcount: killcount,
-                itemcount: itemcount,
-                secretcount: secretcount,
-                leveltime: leveltime / 35
-            }
-        }));
-    }, s, wminfo.maxkills, wminfo.maxitems, wminfo.maxsecret, wminfo.partime, players[0].killcount, players[0].itemcount, players[0].secretcount, leveltime);
 } 
 
 
@@ -1865,10 +1833,6 @@ G_InitNew
   int		episode,
   int		map )
 {
-    EM_ASM_({
-        document.dispatchEvent(new CustomEvent("G_InitNew", { detail: { skill: $0, episode: $1, map: $2 } }));
-    }, skill, episode, map);
-
     const char *skytexturename;
     int             i;
 

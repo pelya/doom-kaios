@@ -89,14 +89,20 @@ Use following code to close the app:
 
     EM_ASM( window.open('', '_self').close(); );
 
+After calling SDL_CreateWindow(), call following code to hide splash image.
+If you don't call it, splash image is hidden automatically in 10 seconds.
+
+    EM_ASM( sys_hide_splash_image(); );
+
 if you simply call exit(0) the app won't clear it's state and will show black screen on the next launch
 
 To write data to files that will not be deleted after you close the app, you have to mount a writable file system,
 and sync it after writing to file.
 Files should be saved to directory defined in FS_WRITE_MOUNT_POINT.
 First call sys_fs_init() from your init code.
-Then check for sys_fs_init_is_done() to return 1 in a loop, before reading or writing any files inside FS_WRITE_MOUNT_POINT.
+Then check for sys_fs_init_get_done() to return 1 in a loop, before reading or writing any files inside FS_WRITE_MOUNT_POINT.
 Call sys_fs_sync() after writing any files, to push data to filesystem database.
+Then check for sys_fs_sync_get_done() to return 1 when FS sync is finished.
 
 The app must mute any music or audio when the phone lid is closed or when the screen is dimmed.
 The app will receive SDL_WINDOWEVENT notifications from SDL. Whenever the app receives events

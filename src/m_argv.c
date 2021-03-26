@@ -26,13 +26,22 @@
 #include "m_misc.h"
 #include "m_argv.h"  // haleyjd 20110212: warning fix
 
+
+char	cmdline_iwad[FILENAME_LIMIT] = "freedoom1.wad";
+char	cmdline_pwad[FILENAME_LIMIT] = "";
+
 static char *cmdline[] = {
     "doom",
     "-nomusic", // OPL3 synthesizer is so CPU intensive, we are getting 1 frame per 10 seconds on KaiOS
 #ifdef SHOW_FPS
     "-devparm",
 #endif
+    "-iwad",
+    cmdline_iwad,
+    "-file",
+    cmdline_pwad,
 };
+
 int		myargc = sizeof(cmdline) / sizeof(cmdline[0]);
 char**	myargv = cmdline;
 

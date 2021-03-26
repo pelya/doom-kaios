@@ -258,9 +258,7 @@ void I_Error (const char *error, ...)
     M_vsnprintf(msgbuf, sizeof(msgbuf), error, argptr);
     va_end(argptr);
 
-    EM_ASM_({
-        document.dispatchEvent(new CustomEvent("I_Error", { detail: { errorMsg: Module.UTF8ToString($0) } }));
-    }, msgbuf);
+    printf("%s", msgbuf);
 
     // Shutdown. Here might be other errors.
 

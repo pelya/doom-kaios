@@ -21,12 +21,18 @@
 #define __M_ARGV__
 
 #include "doomtype.h"
+#include "m_misc.h"
 
 //
 // MISC
 //
+#define FILENAME_LIMIT 64
+#define WADS_CONFIG_PATH (FS_WRITE_MOUNT_POINT "/wads.cfg")
+
 extern  int	myargc;
 extern  char**	myargv;
+extern  char	cmdline_iwad[FILENAME_LIMIT];
+extern  char	cmdline_pwad[FILENAME_LIMIT];
 
 // Returns the position of the given parameter
 // in the arg list (0 if not found).

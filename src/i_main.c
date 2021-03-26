@@ -39,7 +39,7 @@ void D_DoomMain (void);
 
 void D_WaitFsInit(void)
 {
-    if (sys_fs_init_is_done())
+    if (sys_fs_init_get_done())
     {
         M_FindResponseFile();
 

@@ -1128,11 +1128,7 @@ void I_InitGraphics(void)
 
     I_AtExit(I_ShutdownGraphics, true);
 
-    EM_ASM(
-        if (Module && Module.canvas && typeof Module.canvas.calcRatio == "function"){
-            Module.canvas.calcRatio();
-        }
-    );
+    EM_ASM( sys_hide_splash_image(); );
 }
 
 EMSCRIPTEN_KEEPALIVE
