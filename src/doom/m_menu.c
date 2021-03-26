@@ -1361,12 +1361,6 @@ int     quitsounds2[8] =
 
 void M_QuitResponse(int key)
 {
-    if (sys_fs_sync_get_done())
-    {
-        // Force current window to close, this is the only way to clear app state
-        EM_ASM( window.open('', '_self').close(); );
-    }
-
     if (key != key_menu_confirm && key != key_menu_forward)
 	return;
     if (!netgame)
@@ -1405,6 +1399,15 @@ static char *M_SelectEndMessage(void)
 void M_QuitDOOM(int choice)
 {
     M_SaveDefaults();
+
+    // Force current window to close, this is the only way to clear app state
+    EM_ASM({
+        setInterval(function() {
+            if (sys_fs_sync_is_done) {
+                window.open('', '_self').close();
+            }
+        }, 100);
+    });
 
     // This code will be never executed
     DEH_snprintf(endstring, sizeof(endstring), "%s\n\n" DOSY,
