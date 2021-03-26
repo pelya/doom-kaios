@@ -976,7 +976,7 @@ int     epi;
 void M_DrawEpisode(void)
 {
     V_DrawPatchDirect(54, 38, W_CacheLumpName(DEH_String("M_EPISOD"), PU_CACHE));
-    M_WriteText(48, 36 + LINEHEIGHT * 6, "MORE EPISODES");
+    M_WriteText(48, 34 + LINEHEIGHT * 6, "MORE EPISODES");
 }
 
 void M_VerifyNightmare(int key)
@@ -1028,14 +1028,14 @@ boolean downloadFreedoom2Started = false;
 
 void M_DrawMoreEpisodes(void)
 {
-    M_WriteText(48, 36, "MORE EPISODES");
-    M_WriteText(48, 36 + LINEHEIGHT * 2,
+    M_WriteText(48, 34, "MORE EPISODES");
+    M_WriteText(48, 34 + LINEHEIGHT * 2,
                 downloadFreedoom2Started ?
                 "OPEN FREEDOOM2.WAD IN DOWNLOADS" :
                 "DOWNLOAD FREEDOOM2.WAD");
-    M_WriteText(48, 36 + LINEHEIGHT * 3, "SELECT GAME WAD");
-    M_WriteText(48, 36 + LINEHEIGHT * 4, "SELECT MAP PACK WAD");
-    M_WriteText(48, 36 + LINEHEIGHT * 6, "SELECT MAP PACK WAD");
+    M_WriteText(48, 34 + LINEHEIGHT * 3, "SELECT GAME WAD");
+    M_WriteText(48, 34 + LINEHEIGHT * 4, "SELECT MAP PACK WAD");
+    M_WriteText(48, 34 + LINEHEIGHT * 6, "SELECT MAP PACK WAD");
 
     int wadAvailable = EM_ASM_INT( return sys_is_wad_file_available(); );
     if (wadAvailable)
@@ -1154,7 +1154,7 @@ void M_DrawLoadingWad(void)
 
     char text[FILENAME_LIMIT + 20] = "";
     M_snprintf(text, sizeof(text), "IMPORTING %s %s", loadingWadFilename, loadingWadFinished ? "DONE" : "");
-    M_WriteText(48, 36, text);
+    M_WriteText(48, 34, text);
     M_snprintf(text, sizeof(text), "%d%% DONE", writtenLength * 100 / totalLength);
     if (loadingWadFinished)
     {
@@ -1164,8 +1164,8 @@ void M_DrawLoadingWad(void)
     {
         M_snprintf(text, sizeof(text), "ERROR: ONLY .WAD FILES ARE SUPPORTED");
     }
-    M_WriteText(48, 36 + LINEHEIGHT * 2, text);
-    M_WriteText(48, 36 + LINEHEIGHT * 3, "CANCEL");
+    M_WriteText(48, 34 + LINEHEIGHT * 2, text);
+    M_WriteText(48, 34 + LINEHEIGHT * 3, "CANCEL");
 }
 
 void M_LoadingWad(int choice)
