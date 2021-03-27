@@ -1076,7 +1076,7 @@ void M_OpenMoreEpisodesMenu(int choice)
 void M_DrawMoreEpisodes(void)
 {
     M_WriteTextScale2x(48, 30, "GAME DATA AND MODS");
-    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 2, "OPEN GAME DATA WAD");
+    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 2, "OPEN GAME DATA OR MAP PACK WAD");
     M_WriteTextScale2x(48, 30 + LINEHEIGHT * 3,
                 freedoom2Available ?
                 "OPEN FREEDOOM2.WAD" :
@@ -1085,8 +1085,8 @@ void M_DrawMoreEpisodes(void)
                 "DOWNLOAD FREEDOOM2.WAD (30 Mb)");
     M_WriteTextScale2x(48, 30 + LINEHEIGHT * 4, "OPEN FILE MANAGER APP");
 
-    M_WriteTextScale2x(5, 30 + LINEHEIGHT * 6, "TO LOAD WAD FILE FROM SD CARD, OPEN FILE MANAGER");
-    M_WriteTextScale2x(5, 30 + LINEHEIGHT * 7, "SELECT WAD FILE, OPTIONS => SHARE => FREEDOOM");
+    M_WriteTextScale2x(3, 30 + LINEHEIGHT * 6, "TO LOAD DATA FROM SD CARD, OPEN FILE MANAGER");
+    M_WriteTextScale2x(3, 30 + LINEHEIGHT * 7, "SELECT WAD FILE, OPTIONS => SHARE => FREEDOOM");
 
     int wadAvailable = EM_ASM_INT( return sys_is_wad_file_available(); );
     if (wadAvailable)
@@ -1199,7 +1199,7 @@ void M_DrawLoadingWad(void)
         {
             if (loadingWadFileWritten < loadingWadFileSize)
             {
-                enum { FILE_CHUNK_SIZE = 384000 };
+                enum { FILE_CHUNK_SIZE = 256000 };
                 int count = MIN(loadingWadFileSize - loadingWadFileWritten, FILE_CHUNK_SIZE);
 
                 unsigned char *dataPtr = (unsigned char *) EM_ASM_INT({
@@ -1232,8 +1232,8 @@ void M_DrawLoadingWad(void)
     }
 
     char text[FILENAME_LIMIT + 20] = "";
-    M_snprintf(text, sizeof(text), "IMPORTING %s %s", loadingWadFilename, loadingWadFinished ? "DONE" : "");
-    M_WriteTextScale2x(48, 30, text);
+    M_snprintf(text, sizeof(text), "IMPORTING %s", loadingWadFilename);
+    M_WriteTextScale2x(38, 30, text);
     if (loadingWadFinished)
     {
         M_snprintf(text, sizeof(text), "OPEN %s", loadingWadFilename);
@@ -1246,16 +1246,16 @@ void M_DrawLoadingWad(void)
     {
         for (i = 0; i < 30; i++)
         {
-            text[i + 1] = (i > ((long long)loadingWadFileWritten * 20 / (loadingWadFileSize > 0 ? loadingWadFileSize : 123))) ? '|' : ' ';
+            text[i + 1] = (i >= ((long long)loadingWadFileWritten * 30 / (loadingWadFileSize > 0 ? loadingWadFileSize : 123))) ? '!' : ' ';
         }
         text[0] = '[';
         text[31] = ']';
         text[32] = 0;
         M_WriteTextScale2x(48, 30 + LINEHEIGHT * 3, text);
-        M_snprintf(text, sizeof(text), "%d%% DONE: %2.3f of %2.3f Mb",
+        M_snprintf(text, sizeof(text), "%d%% DONE: %d of %d Mb",
                    (int)((long long)loadingWadFileWritten * 100 / (loadingWadFileSize > 0 ? loadingWadFileSize : 123)),
-                   loadingWadFileWritten / 1024.0f,
-                   loadingWadFileSize / 1024.0f);
+                   loadingWadFileWritten / 1024 / 1024,
+                   loadingWadFileSize / 1024 / 1024);
     }
     M_WriteTextScale2x(48, 30 + LINEHEIGHT * 2, text);
     M_WriteTextScale2x(48, 30 + LINEHEIGHT * 5, "CANCEL");
