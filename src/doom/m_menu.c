@@ -1181,8 +1181,7 @@ void M_DrawLoadingWad(void)
             else
             {
                 char savePath[64 + 10] = "";
-                M_snprintf(savePath, sizeof(savePath), "%s/%s.tmp",
-                    FS_WRITE_MOUNT_POINT, loadingWadFilename);
+                M_snprintf(savePath, sizeof(savePath), "%s/wad.tmp", FS_WRITE_MOUNT_POINT);
                 DEH_printf("Saving WAD to: %s size %d\n", savePath, loadingWadFileSize);
                 loadingWadFile = fopen(savePath, "wb");
                 loadingWadFileWritten = 0;
@@ -1215,18 +1214,17 @@ void M_DrawLoadingWad(void)
             }
             if (loadingWadFileWritten >= loadingWadFileSize)
             {
-                DEH_printf("Saving WAD finished, length %d\n", loadingWadFileWritten);
                 fclose(loadingWadFile);
                 char fromPath[64 + 10] = "";
                 char toPath[64 + 10] = "";
-                M_snprintf(fromPath, sizeof(fromPath), "%s/%s.tmp",
-                    FS_WRITE_MOUNT_POINT, loadingWadFilename);
+                M_snprintf(fromPath, sizeof(fromPath), "%s/wad.tmp", FS_WRITE_MOUNT_POINT);
                 M_snprintf(toPath, sizeof(toPath), "%s/%s",
                     FS_WRITE_MOUNT_POINT, loadingWadFilename);
                 rename(fromPath, toPath);
                 sys_fs_sync();
                 loadingWadFinished = true;
                 loadingWadFile = NULL;
+                DEH_printf("Saving WAD finished, length %d\n", loadingWadFileWritten);
             }
         }
     }
