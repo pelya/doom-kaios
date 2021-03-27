@@ -881,9 +881,12 @@ void G_Ticker (void)
 	  case ga_savegame: 
 	    G_DoSaveGame (); 
 	    break; 
-	  case ga_playdemo: 
-	    if ( !G_DoPlayDemo () )
-            D_AdvanceDemo(); 
+	  case ga_playdemo:
+	    if (!(EM_ASM_INT( return sys_is_wad_file_available(); )))
+        {
+            if ( !G_DoPlayDemo () )
+                D_AdvanceDemo();
+        }
 	    break; 
 	  case ga_completed: 
 	    G_DoCompleted (); 
