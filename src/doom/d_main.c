@@ -1439,6 +1439,13 @@ void D_DoomMain (void)
 
     I_PrintBanner(PACKAGE_STRING);
 
+    if ((EM_ASM_INT( return sys_is_wad_file_available(); )))
+    {
+        // Use fallback WAD when importing new WAD file, in case we import broken WAD and the game fails to load
+        M_StringCopy(cmdline_iwad, "freedoom1.wad", FILENAME_LIMIT);
+        cmdline_pwad[0] = 0;
+    }
+
     printf("D_MAIN: init emscripten main loop.\n");
     D_SetLoopIter();
     I_AtExit(D_CancelLoopIter, true);
