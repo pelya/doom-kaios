@@ -46,6 +46,7 @@
           "patternFlags": "i"
         }
       },
+      "disposition": "window",
       "returnValue": false
     },
     "share": {
@@ -58,6 +59,7 @@
         "pattern": "^.*\\.wad$",
         "patternFlags": "i"
       },
+      "disposition": "window",
       "returnValue": false
     }
   }
