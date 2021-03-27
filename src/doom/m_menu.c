@@ -1214,6 +1214,7 @@ void M_DrawLoadingWad(void)
             }
             if (loadingWadFileWritten >= loadingWadFileSize)
             {
+                EM_ASM( sys_free_wad_file_data(); );
                 fclose(loadingWadFile);
                 char fromPath[64 + 10] = "";
                 char toPath[64 + 10] = "";
