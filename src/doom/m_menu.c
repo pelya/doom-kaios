@@ -401,7 +401,7 @@ menu_t MoreEpisodesDef =
     MoreEpisodesMenu,	// menuitem_t ->
     M_DrawMoreEpisodes,	// drawing routine ->
     48,63,				// x,y
-    more_ep_download_freedoom2	// lastOn
+    more_ep_select_wad	// lastOn
 };
 
 enum
@@ -1075,7 +1075,7 @@ void M_OpenMoreEpisodesMenu(int choice)
 
 void M_DrawMoreEpisodes(void)
 {
-    M_WriteTextScale2x(48, 30, "MORE EPISODES");
+    M_WriteTextScale2x(48, 30, "GAME DATA AND MODS");
     M_WriteTextScale2x(48, 30 + LINEHEIGHT * 2, "OPEN GAME DATA WAD");
     M_WriteTextScale2x(48, 30 + LINEHEIGHT * 3,
                 freedoom2Available ?
@@ -1085,8 +1085,8 @@ void M_DrawMoreEpisodes(void)
                 "DOWNLOAD FREEDOOM2.WAD (30 Mb)");
     M_WriteTextScale2x(48, 30 + LINEHEIGHT * 4, "OPEN FILE MANAGER APP");
 
-    M_WriteTextScale2x(40, 30 + LINEHEIGHT * 6, "TO LOAD WAD FILE FROM SD CARD, OPEN FILE MANAGER APP");
-    M_WriteTextScale2x(40, 30 + LINEHEIGHT * 7, "SELECT WAD FILE, CLICK OPTIONS => SHARE => FREEDOOM");
+    M_WriteTextScale2x(5, 30 + LINEHEIGHT * 6, "TO LOAD WAD FILE FROM SD CARD, OPEN FILE MANAGER");
+    M_WriteTextScale2x(5, 30 + LINEHEIGHT * 7, "SELECT WAD FILE, OPTIONS => SHARE => FREEDOOM");
 
     int wadAvailable = EM_ASM_INT( return sys_is_wad_file_available(); );
     if (wadAvailable)
@@ -1376,6 +1376,8 @@ void M_OpenSelectWadMenu(void)
 
 void M_DrawSelectWad(void)
 {
+    M_WriteTextScale2x(OptionsDef.x + 20, OptionsDef.y - LINEHEIGHT * 2,
+                       "SELECT WAD FILE");
     for (int i = select_wad_0; i < select_wad_end; i++)
     {
         M_WriteTextScale2x(OptionsDef.x, OptionsDef.y + LINEHEIGHT * i,
@@ -1386,7 +1388,7 @@ void M_DrawSelectWad(void)
 void M_SelectWad(int choice)
 {
     boolean writeCfg = false;
-    if (choice == select_wad_0 && selectWadNextCounter)
+    if (choice == select_wad_0 && selectWadNextCounter == 0)
     {
         S_StartSound(NULL,sfx_swtchn);
         M_StringCopy(cmdline_iwad, "freedoom1.wad", FILENAME_LIMIT);
