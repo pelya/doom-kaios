@@ -1446,7 +1446,7 @@ void D_DoomMain (void)
     {
         // Use fallback WAD when importing new WAD file, in case we import broken WAD and the game fails to load
         M_StringCopy(cmdline_iwad, "freedoom1.wad", FILENAME_LIMIT);
-        cmdline_pwad[0] = 0;
+        M_StringCopy(cmdline_pwad, "", FILENAME_LIMIT);
     }
     else
     {
