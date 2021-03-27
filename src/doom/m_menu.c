@@ -222,6 +222,7 @@ static void M_DrawSaveLoadBorder(int x,int y);
 static void M_SetupNextMenu(menu_t *menudef);
 static void M_DrawThermo(int x,int y,int thermWidth,int thermDot);
 static void M_WriteText(int x, int y, char *string);
+static void M_WriteTextScale2x(int x, int y, char *string);
 static int  M_StringWidth(char *string);
 static int  M_StringHeight(const char *string);
 static void M_StartMessage(const char *string, void *routine, boolean input);
@@ -976,7 +977,7 @@ int     epi;
 void M_DrawEpisode(void)
 {
     V_DrawPatchDirect(54, 38, W_CacheLumpName(DEH_String("M_EPISOD"), PU_CACHE));
-    M_WriteText(48, 34 + LINEHEIGHT * 6, "MORE EPISODES");
+    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 6, "MORE EPISODES");
 }
 
 void M_VerifyNightmare(int key)
@@ -1028,14 +1029,14 @@ boolean downloadFreedoom2Started = false;
 
 void M_DrawMoreEpisodes(void)
 {
-    M_WriteText(48, 34, "MORE EPISODES");
-    M_WriteText(48, 34 + LINEHEIGHT * 2,
+    M_WriteTextScale2x(48, 30, "MORE EPISODES");
+    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 2,
                 downloadFreedoom2Started ?
                 "OPEN FREEDOOM2.WAD IN DOWNLOADS" :
                 "DOWNLOAD FREEDOOM2.WAD");
-    M_WriteText(48, 34 + LINEHEIGHT * 3, "SELECT GAME WAD");
-    M_WriteText(48, 34 + LINEHEIGHT * 4, "SELECT MAP PACK WAD");
-    M_WriteText(48, 34 + LINEHEIGHT * 6, "SELECT MAP PACK WAD");
+    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 3, "SELECT GAME WAD");
+    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 4, "SELECT MAP PACK WAD");
+    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 6, "SELECT MAP PACK WAD");
 
     int wadAvailable = EM_ASM_INT( return sys_is_wad_file_available(); );
     if (wadAvailable)
@@ -1154,7 +1155,7 @@ void M_DrawLoadingWad(void)
 
     char text[FILENAME_LIMIT + 20] = "";
     M_snprintf(text, sizeof(text), "IMPORTING %s %s", loadingWadFilename, loadingWadFinished ? "DONE" : "");
-    M_WriteText(48, 34, text);
+    M_WriteTextScale2x(48, 30, text);
     M_snprintf(text, sizeof(text), "%d%% DONE", writtenLength * 100 / totalLength);
     if (loadingWadFinished)
     {
@@ -1164,8 +1165,8 @@ void M_DrawLoadingWad(void)
     {
         M_snprintf(text, sizeof(text), "ERROR: ONLY .WAD FILES ARE SUPPORTED");
     }
-    M_WriteText(48, 34 + LINEHEIGHT * 2, text);
-    M_WriteText(48, 34 + LINEHEIGHT * 3, "CANCEL");
+    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 2, text);
+    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 3, "CANCEL");
 }
 
 void M_LoadingWad(int choice)
@@ -1613,6 +1614,53 @@ M_WriteText
 	if (cx+w > SCREENWIDTH)
 	    break;
 	V_DrawPatchDirect(cx, cy, hu_font[c]);
+	cx+=w;
+    }
+}
+
+//
+//      Write a double-size string using the hu_font to match the game menu
+//
+void
+M_WriteTextScale2x
+( int		x,
+  int		y,
+  char*		string)
+{
+    int		w;
+    char*	ch;
+    int		c;
+    int		cx;
+    int		cy;
+		
+
+    ch = string;
+    cx = x;
+    cy = y;
+	
+    while(1)
+    {
+	c = *ch++;
+	if (!c)
+	    break;
+	if (c == '\n')
+	{
+	    cx = x;
+	    cy += LINEHEIGHT;
+	    continue;
+	}
+		
+	c = toupper(c) - HU_FONTSTART;
+	if (c < 0 || c>= HU_FONTSIZE)
+	{
+	    cx += 4;
+	    continue;
+	}
+		
+	w = SHORT (hu_font[c]->width);
+	if (cx+w > SCREENWIDTH)
+	    break;
+	V_DrawPatchScaleVert2x(cx, cy, hu_font[c]);
 	cx+=w;
     }
 }

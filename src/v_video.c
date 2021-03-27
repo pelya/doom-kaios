@@ -628,6 +628,104 @@ void V_DrawShadowedPatch(int x, int y, patch_t *patch)
 }
 
 //
+// V_DrawPatchScaleVert3x
+//
+// Draw a patch and scale it 3x vertically
+//
+
+void V_DrawPatchScaleVert2x(int x, int y, patch_t *patch)
+{
+    int count;
+    int col;
+    column_t *column;
+    pixel_t *desttop;
+    pixel_t *dest;
+    byte *source;
+    int w;
+
+    y -= SHORT(patch->topoffset);
+    x -= SHORT(patch->leftoffset);
+
+    // haleyjd 08/28/10: Strife needs silent error checking here.
+    if(patchclip_callback)
+    {
+        if(!patchclip_callback(patch, x, y))
+            return;
+    }
+
+    V_MarkRect(x, y, SHORT(patch->width), SHORT(patch->height) * 3);
+
+    col = 0;
+    desttop = dest_screen + y * SCREENWIDTH + x;
+
+    w = SHORT(patch->width);
+
+    for ( ; col<w ; x++, col++, desttop++)
+    {
+        int topdelta = -1;
+
+        // [crispy] too far left
+        if (x < 0)
+        {
+            continue;
+        }
+
+        // [crispy] too far right / width
+        if (x >= SCREENWIDTH)
+        {
+            break;
+        }
+
+        column = (column_t *)((byte *)patch + LONG(patch->columnofs[col]));
+
+        // step through the posts in a column
+        while (column->topdelta != 0xff)
+        {
+            int top, srccol = 0;
+            // [crispy] support for DeePsea tall patches
+            if (column->topdelta <= topdelta)
+            {
+                topdelta += column->topdelta;
+            }
+            else
+            {
+                topdelta = column->topdelta;
+            }
+            top = y + topdelta * 2;
+            source = (byte *)column + 3;
+            dest = desttop + topdelta * 2 * SCREENWIDTH;
+            count = column->length;
+
+            // [crispy] too low / height
+            if (top + count * 2 > SCREENHEIGHT)
+            {
+                count = SCREENHEIGHT - top;
+            }
+
+            // [crispy] nothing left to draw?
+            if (count < 1)
+            {
+                break;
+            }
+
+            while (count--)
+            {
+                // [crispy] too high
+                if (top++ >= 0)
+                {
+                    *dest = source[srccol];
+                    *(dest + SCREENWIDTH) = source[srccol];
+                }
+                srccol++;
+                dest += SCREENWIDTH * 2;
+            }
+            column = (column_t *)((byte *)column + column->length + 4);
+        }
+    }
+}
+
+
+//
 // Load tint table from TINTTAB lump.
 //
 
