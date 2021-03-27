@@ -17,6 +17,7 @@ set(CMAKE_C_FLAGS " \
     -Wno-\#warnings \
     -Wno-macro-redefined \
     -Wno-switch \
+    -Wno-invalid-pp-token \
     -s WASM=0 \
     -s USE_SDL=2 \
     -s USE_LIBPNG=1 \

@@ -198,6 +198,7 @@ static void M_MusicVol(int choice);
 static void M_ChangeDetail(int choice);
 static void M_SizeDisplay(int choice);
 static void M_Sound(int choice);
+static void M_OpenMoreEpisodesMenu(int choice);
 
 static void M_FinishReadThis(int choice);
 static void M_LoadSelect(int choice);
@@ -276,7 +277,6 @@ enum
     ep2,
     ep3,
     ep4,
-    ep_more,
     ep_end
 } episodes_e;
 
@@ -286,7 +286,6 @@ menuitem_t EpisodeMenu[]=
     {1,"M_EPI2", M_Episode,'t'},
     {1,"M_EPI3", M_Episode,'i'},
     {1,"M_EPI4", M_Episode,'t'},
-    {1,"",       M_Episode,'m'},
 };
 
 menu_t  EpiDef =
@@ -299,55 +298,6 @@ menu_t  EpiDef =
     ep1			// lastOn
 };
 
-enum
-{
-    more_ep_download_freedoom2,
-    more_ep_open_file_manager,
-    more_ep_select_iwad,
-    more_ep_select_pwad,
-    more_ep_end
-} more_episodes_e;
-
-menuitem_t MoreEpisodesMenu[]=
-{
-    {1,"", M_MoreEpisodes,'k'},
-    {1,"", M_MoreEpisodes,'t'},
-    {1,"", M_MoreEpisodes,'l'},
-    {1,"", M_MoreEpisodes,'m'},
-};
-
-menu_t MoreEpisodesDef =
-{
-    more_ep_end,		// # of menu items
-    &EpiDef,			// previous menu
-    MoreEpisodesMenu,	// menuitem_t ->
-    M_DrawMoreEpisodes,	// drawing routine ->
-    48,63,				// x,y
-    more_ep_download_freedoom2	// lastOn
-};
-
-enum
-{
-    loading_wad_switch_new,
-    loading_wad_keep_current,
-    loading_wad_end
-} loading_wad_e;
-
-menuitem_t LoadingWadMenu[]=
-{
-    {1,"", M_LoadingWad,'k'},
-    {1,"", M_LoadingWad,'t'},
-};
-
-menu_t LoadingWadDef =
-{
-    loading_wad_end,		// # of menu items
-    &EpiDef,				// previous menu
-    LoadingWadMenu,			// menuitem_t ->
-    M_DrawLoadingWad,		// drawing routine ->
-    48,63,					// x,y
-    loading_wad_switch_new	// lastOn
-};
 
 //
 // NEW GAME
@@ -394,7 +344,7 @@ enum
     scrnsize,
     option_empty1,
     mousesens,
-    option_empty2,
+    moreepisodes,
     soundvol,
     opt_end
 } options_e;
@@ -406,8 +356,8 @@ menuitem_t OptionsMenu[]=
     {1,"M_DETAIL",	M_ChangeDetail,'g'},
     {2,"M_SCRNSZ",	M_SizeDisplay,'s'},
     {-1,"",0,'\0'},
-    {2,"M_MSENS",	M_ChangeSensitivity,'m'},
-    {-1,"",0,'\0'},
+    {1,"M_MSENS",	M_ChangeSensitivity,'m'},
+    {1,"",			M_OpenMoreEpisodesMenu,'l'},
     {1,"M_SVOL",	M_Sound,'s'}
 };
 
@@ -419,6 +369,60 @@ menu_t  OptionsDef =
     M_DrawOptions,
     60,37,
     0
+};
+
+
+//
+// More Episodes menu - download and open WAD
+//
+enum
+{
+    more_ep_download_freedoom2,
+    more_ep_open_file_manager,
+    more_ep_select_iwad,
+    more_ep_select_pwad,
+    more_ep_end
+} more_episodes_e;
+
+menuitem_t MoreEpisodesMenu[]=
+{
+    {1,"", M_MoreEpisodes,'k'},
+    {1,"", M_MoreEpisodes,'t'},
+    {1,"", M_MoreEpisodes,'l'},
+    {1,"", M_MoreEpisodes,'m'},
+};
+
+menu_t MoreEpisodesDef =
+{
+    more_ep_end,		// # of menu items
+    &OptionsDef,		// previous menu
+    MoreEpisodesMenu,	// menuitem_t ->
+    M_DrawMoreEpisodes,	// drawing routine ->
+    48,63,				// x,y
+    more_ep_download_freedoom2	// lastOn
+};
+
+enum
+{
+    loading_wad_switch_new,
+    loading_wad_keep_current,
+    loading_wad_end
+} loading_wad_e;
+
+menuitem_t LoadingWadMenu[]=
+{
+    {1,"", M_LoadingWad,'k'},
+    {1,"", M_LoadingWad,'t'},
+};
+
+menu_t LoadingWadDef =
+{
+    loading_wad_end,		// # of menu items
+    &MoreEpisodesDef,		// previous menu
+    LoadingWadMenu,			// menuitem_t ->
+    M_DrawLoadingWad,		// drawing routine ->
+    48,63,					// x,y
+    loading_wad_switch_new	// lastOn
 };
 
 //
@@ -979,7 +983,6 @@ int     epi;
 void M_DrawEpisode(void)
 {
     V_DrawPatchDirect(54, 38, W_CacheLumpName(DEH_String("M_EPISOD"), PU_CACHE));
-    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 6, "MORE EPISODES");
 }
 
 void M_VerifyNightmare(int key)
@@ -1005,12 +1008,6 @@ void M_ChooseSkill(int choice)
 
 void M_Episode(int choice)
 {
-    if (choice == ep_more)
-    {
-        M_SetupNextMenu(&MoreEpisodesDef);
-        return;
-    }
-
     if ( (gamemode == shareware)
 	 && choice)
     {
@@ -1030,19 +1027,25 @@ void M_Episode(int choice)
 boolean downloadFreedoom2Started = false;
 boolean freedoom2Available = false;
 
+void M_OpenMoreEpisodesMenu(int choice)
+{
+    M_SetupNextMenu(&MoreEpisodesDef);
+}
+
 void M_DrawMoreEpisodes(void)
 {
     M_WriteTextScale2x(48, 30, "MORE EPISODES");
     M_WriteTextScale2x(48, 30 + LINEHEIGHT * 2,
                 freedoom2Available ?
-                "LOAD FREEDOOM2" :
+                "LOAD FREEDOOM2.WAD" :
                 downloadFreedoom2Started ?
                 "OPEN FREEDOOM2.WAD IN DOWNLOADS APP" :
-                "DOWNLOAD FREEDOOM2.WAD");
+                "DOWNLOAD FREEDOOM2.WAD (30 Mb)");
     M_WriteTextScale2x(48, 30 + LINEHEIGHT * 3, "OPEN FILE MANAGER APP");
-    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 4, "LOAD GAME WAD");
+    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 4, "LOAD GAME DATA WAD");
     M_WriteTextScale2x(48, 30 + LINEHEIGHT * 5, "LOAD MAP PACK WAD");
-    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 7, "FILE MANAGER TEXT");
+    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 7, "SELECT .WAD FILE IN FILE MANAGER");
+    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 8, "SELECT OPTIONS -> SHARE -> FREEDOOM");
 
     int wadAvailable = EM_ASM_INT( return sys_is_wad_file_available(); );
     if (wadAvailable)
@@ -1141,7 +1144,7 @@ void M_DrawLoadingWad(void)
             else
             {
                 char savePath[64 + 10] = "";
-                M_snprintf(savePath, sizeof(savePath), "%s/%s",
+                M_snprintf(savePath, sizeof(savePath), "%s/%s.tmp",
                     FS_WRITE_MOUNT_POINT, loadingWadFilename);
                 DEH_printf("Saving WAD to: %s size %d\n", savePath, loadingWadFileSize);
                 loadingWadFile = fopen(savePath, "wb");
@@ -1161,7 +1164,6 @@ void M_DrawLoadingWad(void)
             {
                 enum { FILE_CHUNK_SIZE = 256000 };
                 int count = MIN(loadingWadFileSize - loadingWadFileWritten, FILE_CHUNK_SIZE);
-                DEH_printf("Reading WAD chunk pos %d size %d\n", loadingWadFileWritten, count);
 
                 unsigned char *dataPtr = (unsigned char *) EM_ASM_INT({
                     return sys_copy_wad_file_data($0, $1);
@@ -1169,7 +1171,6 @@ void M_DrawLoadingWad(void)
 
                 if (dataPtr != NULL)
                 {
-                    DEH_printf("Got WAD chunk %p\n", dataPtr);
                     fwrite(dataPtr, 1, count, loadingWadFile);
                     free(dataPtr);
                     loadingWadFileWritten += count;
@@ -1177,12 +1178,19 @@ void M_DrawLoadingWad(void)
             }
             if (loadingWadFileWritten >= loadingWadFileSize)
             {
-                DEH_printf("Saving WAD finished, length %d total length %d\n", loadingWadFileWritten, loadingWadFileSize);
+                DEH_printf("Saving WAD finished, length %d\n", loadingWadFileWritten);
                 fclose(loadingWadFile);
+                char fromPath[64 + 10] = "";
+                char toPath[64 + 10] = "";
+                M_snprintf(fromPath, sizeof(fromPath), "%s/%s.tmp",
+                    FS_WRITE_MOUNT_POINT, loadingWadFilename);
+                M_snprintf(toPath, sizeof(toPath), "%s/%s",
+                    FS_WRITE_MOUNT_POINT, loadingWadFilename);
+                rename(fromPath, toPath);
                 sys_fs_sync();
                 loadingWadFinished = true;
                 loadingWadFile = NULL;
-                EM_ASM( sys_free_wad_file_data(); );
+                //EM_ASM( sys_free_wad_file_data(); );
             }
         }
     }
@@ -1190,7 +1198,7 @@ void M_DrawLoadingWad(void)
     char text[FILENAME_LIMIT + 20] = "";
     M_snprintf(text, sizeof(text), "IMPORTING %s %s", loadingWadFilename, loadingWadFinished ? "DONE" : "");
     M_WriteTextScale2x(48, 30, text);
-    M_snprintf(text, sizeof(text), "%d%% DONE", loadingWadFileWritten * 100 / (loadingWadFileSize > 0 ? loadingWadFileSize : 123) );
+    M_snprintf(text, sizeof(text), "%d%% DONE", (int)((long long)loadingWadFileWritten * 100 / (loadingWadFileSize > 0 ? loadingWadFileSize : 123)));
     if (loadingWadFinished)
     {
         M_snprintf(text, sizeof(text), "OPEN %s", loadingWadFilename);
@@ -1211,7 +1219,7 @@ void M_LoadingWad(int choice)
         {
             S_StartSound(NULL,sfx_swtchn);
             char wadHeader[4] = "";
-            char wadPath[64 + 10] = "";
+            char wadPath[FILENAME_LIMIT] = "";
             M_snprintf(wadPath, sizeof(wadPath), "%s/%s", FS_WRITE_MOUNT_POINT, loadingWadFilename);
             FILE *wadFile = fopen(wadPath, "rb");
             if (wadFile == NULL)
@@ -1222,11 +1230,11 @@ void M_LoadingWad(int choice)
             fclose(wadFile);
             if (memcmp(wadHeader, "IWAD", 4) == 0)
             {
-                memcpy(cmdline_iwad, loadingWadFilename, FILENAME_LIMIT);
+                memcpy(cmdline_iwad, wadPath, FILENAME_LIMIT);
             }
             if (memcmp(wadHeader, "PWAD", 4) == 0)
             {
-                memcpy(cmdline_pwad, loadingWadFilename, FILENAME_LIMIT);
+                memcpy(cmdline_pwad, wadPath, FILENAME_LIMIT);
             }
             FILE *wadsCfg = fopen(WADS_CONFIG_PATH, "wb");
             if (wadsCfg == NULL)
@@ -1237,6 +1245,7 @@ void M_LoadingWad(int choice)
             fwrite(cmdline_pwad, 1, FILENAME_LIMIT, wadsCfg);
             fclose(wadsCfg);
             sys_fs_sync();
+            DEH_printf("Saving %s IWAD %s PWAD %s\n", WADS_CONFIG_PATH, cmdline_iwad, cmdline_pwad);
             // Reload using new config
             EM_ASM({
                 setInterval(function() {
@@ -1278,8 +1287,8 @@ void M_DrawOptions(void)
                       W_CacheLumpName(DEH_String(msgNames[showMessages]),
                                       PU_CACHE));
 
-    M_DrawThermo(OptionsDef.x, OptionsDef.y + LINEHEIGHT * (mousesens + 1),
-		 10, mouseSensitivity);
+    M_WriteTextScale2x(OptionsDef.x, OptionsDef.y + 2 + LINEHEIGHT * moreepisodes,
+                       "GAME DATA AND MODS");
 
     M_DrawThermo(OptionsDef.x,OptionsDef.y+LINEHEIGHT*(scrnsize+1),
 		 9,screenSize);

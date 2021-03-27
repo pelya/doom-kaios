@@ -639,7 +639,10 @@ void D_PageDrawer (void)
 //
 void D_AdvanceDemo (void)
 {
-    advancedemo = true;
+    //if (!(EM_ASM_INT( return sys_is_wad_file_available(); )))
+    {
+        advancedemo = true;
+    }
 }
 
 
@@ -1444,6 +1447,17 @@ void D_DoomMain (void)
         // Use fallback WAD when importing new WAD file, in case we import broken WAD and the game fails to load
         M_StringCopy(cmdline_iwad, "freedoom1.wad", FILENAME_LIMIT);
         cmdline_pwad[0] = 0;
+    }
+    else
+    {
+        FILE *wadsCfg = fopen(WADS_CONFIG_PATH, "rb");
+        if (wadsCfg != NULL)
+        {
+            fread(cmdline_iwad, 1, FILENAME_LIMIT, wadsCfg);
+            fread(cmdline_pwad, 1, FILENAME_LIMIT, wadsCfg);
+            fclose(wadsCfg);
+            DEH_printf("Using IWAD %s PWAD %s\n", cmdline_iwad, cmdline_pwad);
+        }
     }
 
     printf("D_MAIN: init emscripten main loop.\n");

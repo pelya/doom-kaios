@@ -171,7 +171,7 @@
         return (sys_open_wad_file_blob !== null &&
                 sys_open_wad_file_name !== null &&
                 sys_open_wad_file_name !== '' &&
-                lengthBytesUTF8(sys_open_wad_file_name) < 64 &&
+                lengthBytesUTF8(sys_open_wad_file_name) < 64 - 7 &&
                 lengthBytesUTF8(sys_open_wad_file_name) >= 5 &&
                 sys_open_wad_file_blob.size > 0);
       }
