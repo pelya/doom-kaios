@@ -1246,7 +1246,7 @@ void M_DrawLoadingWad(void)
     {
         for (i = 0; i < 30; i++)
         {
-            text[i + 1] = (i >= ((long long)loadingWadFileWritten * 30 / (loadingWadFileSize > 0 ? loadingWadFileSize : 123))) ? '!' : ' ';
+            text[i + 1] = (i >= ((long long)loadingWadFileWritten * 30 / (loadingWadFileSize > 0 ? loadingWadFileSize : 123))) ? ' ' : '!';
         }
         text[0] = '[';
         text[31] = ']';
