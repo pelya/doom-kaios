@@ -1687,7 +1687,7 @@ static const int scantokey[128] =
     0,      0,      0,      0,      0,      0,      0,      0,
     0,      0,      0,      0,      0,      0,      0,      0,
     0,      0,      0,      0,      0,      0,      0,      0,
-    0,      0,      0,      0,      0,      0,      KEY_PRTSCR, 0
+    0,      0,      0,      0,      0,      KEYP_ENTER,     KEY_PRTSCR, 0
 };
 
 
