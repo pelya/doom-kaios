@@ -1339,7 +1339,7 @@ char selectWadText[select_wad_end][FILENAME_LIMIT];
 static void M_SelectWadReadDirectory(void)
 {
     int idx;
-    for (idx = selectWadNextCounter ? 0 : 1; idx < select_wad_end; idx++)
+    for (idx = 0; idx < select_wad_end; idx++)
     {
         M_snprintf(selectWadText[idx], FILENAME_LIMIT, "---");
     }
@@ -1376,12 +1376,8 @@ void M_OpenSelectWadMenu(void)
 {
     selectWadNextCounter = 0;
     M_SetupNextMenu(&SelectWadDef);
-    M_snprintf(selectWadText[select_wad_0], FILENAME_LIMIT, "FREEDOOM1.WAD");
-    for (int i = select_wad_1; i < select_wad_end; i++)
-    {
-        M_snprintf(selectWadText[i], FILENAME_LIMIT, "---");
-    }
     M_SelectWadReadDirectory();
+    M_snprintf(selectWadText[select_wad_0], FILENAME_LIMIT, "FREEDOOM1.WAD");
 }
 
 void M_DrawSelectWad(void)
@@ -1408,14 +1404,9 @@ void M_SelectWad(int choice)
     else if (choice == select_wad_next && strcmp(selectWadText[select_wad_next], "NEXT") == 0)
     {
         S_StartSound(NULL,sfx_swtchn);
-        if (selectWadNextCounter == 0)
-        {
-            selectWadNextCounter += select_wad_next - 1;
-        }
-        else
-        {
-            selectWadNextCounter += select_wad_next;
-        }
+        selectWadNextCounter += select_wad_next;
+        M_SelectWadReadDirectory();
+        itemOn = select_wad_0;
     }
     else if (choice < select_wad_end && strcmp(selectWadText[choice], "---") != 0)
     {
