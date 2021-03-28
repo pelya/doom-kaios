@@ -1302,6 +1302,7 @@ void M_LoadingWad(int choice)
             fclose(wadsCfg);
             sys_fs_sync();
             sys_free_wake_lock();
+            menuactive = false; // Hide the menu to avoid double clicks, the game will stay active for half-second
             // Reload using new config
             EM_ASM({
                 setInterval(function() {
@@ -1450,6 +1451,7 @@ void M_SelectWad(int choice)
         fwrite(cmdline_pwad, 1, FILENAME_LIMIT, wadsCfg);
         fclose(wadsCfg);
         sys_fs_sync();
+        menuactive = false; // Hide the menu to avoid double clicks, the game will stay active for half-second
         // Reload using new config
         EM_ASM({
             setInterval(function() {
@@ -1642,6 +1644,12 @@ static char *M_SelectEndMessage(void)
 
 void M_QuitDOOM(int choice)
 {
+    // This code will be never executed
+    DEH_snprintf(endstring, sizeof(endstring), "%s\n\n" DOSY,
+                 DEH_String(M_SelectEndMessage()));
+
+    M_StartMessage(endstring,M_QuitResponse,true);
+
     M_SaveDefaults();
 
     // Force current window to close, this is the only way to clear app state
@@ -1653,11 +1661,7 @@ void M_QuitDOOM(int choice)
         }, 100);
     });
 
-    // This code will be never executed
-    DEH_snprintf(endstring, sizeof(endstring), "%s\n\n" DOSY,
-                 DEH_String(M_SelectEndMessage()));
-
-    M_StartMessage(endstring,M_QuitResponse,true);
+    menuactive = false; // Hide the menu to avoid double clicks, the game will stay active for half-second
 }
 
 
