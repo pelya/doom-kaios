@@ -117,7 +117,8 @@ static void W_POSIX_CloseFile(wad_file_t *wad)
     // Close the file
     if (posix_wad->wad.mapped != NULL)
     {
-        munmap(posix_wad->wad.mapped, posix_wad->wad.length);
+        // The game seems to keep using the memory after the file is closed!
+        //munmap(posix_wad->wad.mapped, posix_wad->wad.length);
     }
     close(posix_wad->handle);
     Z_Free(posix_wad);
