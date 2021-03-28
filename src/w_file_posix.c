@@ -60,6 +60,11 @@ static void MapFile(posix_wad_file_t *wad, char *filename)
                   protection, flags, 
                   wad->handle, 0);
 
+    if (result == MAP_FAILED)
+    {
+        result = NULL;
+    }
+
     wad->wad.mapped = result;
 
     if (result == NULL)
