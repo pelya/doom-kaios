@@ -711,3 +711,26 @@ int sys_fs_sync_get_done(void)
 #endif // EMSCRIPTEN
 	return status;
 }
+
+void sys_take_wake_lock(void)
+{
+#ifdef EMSCRIPTEN
+	EM_ASM({
+		if (sys_screen_wake_lock === null) {
+			sys_screen_wake_lock = window.navigator.requestWakeLock('screen');
+		}
+	});
+#endif // EMSCRIPTEN
+}
+
+void sys_free_wake_lock(void)
+{
+#ifdef EMSCRIPTEN
+	EM_ASM({
+		if (sys_screen_wake_lock !== null) {
+			sys_screen_wake_lock.unlock();
+			sys_screen_wake_lock = null;
+		}
+	});
+#endif // EMSCRIPTEN
+}

@@ -1300,6 +1300,7 @@ void M_LoadingWad(int choice)
             fwrite(cmdline_pwad, 1, FILENAME_LIMIT, wadsCfg);
             fclose(wadsCfg);
             sys_fs_sync();
+            sys_free_wake_lock();
             // Reload using new config
             EM_ASM({
                 setInterval(function() {
@@ -1323,6 +1324,7 @@ void M_LoadingWad(int choice)
                    FS_WRITE_MOUNT_POINT, loadingWadFileName);
         remove(savePath);
         sys_fs_sync();
+        sys_free_wake_lock();
         M_SetupNextMenu(&MainDef);
     }
 }
@@ -2694,6 +2696,7 @@ void M_Init (void)
     {
         menuactive = 1;
         M_SetupNextMenu(&LoadingWadDef);
+        sys_take_wake_lock();
     }
 }
 

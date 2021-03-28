@@ -61,6 +61,8 @@ extern void sys_fs_init(void);
 extern int sys_fs_init_get_done(void);
 extern void sys_fs_sync(void);
 extern int sys_fs_sync_get_done(void);
+extern void sys_take_wake_lock(void);
+extern void sys_free_wake_lock(void);
 
 #endif
 

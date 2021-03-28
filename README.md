@@ -104,6 +104,8 @@ Then check for sys_fs_init_get_done() to return 1 in a loop, before reading or w
 Call sys_fs_sync() after writing any files, to push data to filesystem database.
 Then check for sys_fs_sync_get_done() to return 1 when FS sync is finished.
 
+To prevent the screen from sleeping, call sys_take_wake_lock(), and call sys_free_wake_lock() to enable sleep.
+
 The app must mute any music or audio when the phone lid is closed or when the screen is dimmed.
 The app will receive SDL_WINDOWEVENT notifications from SDL. Whenever the app receives events
 
