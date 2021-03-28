@@ -21,6 +21,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <dirent.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 
 #include "doomdef.h"
@@ -1153,7 +1155,7 @@ void M_DrawLoadingWad(void)
     boolean unsupportedFormat = false;
     int i;
 
-    if (!loadingWadFinished)
+    if (!loadingWadFinished && sys_fs_sync_get_done())
     {
         if (!loadingWadFile)
         {
@@ -1167,6 +1169,7 @@ void M_DrawLoadingWad(void)
             {
                 loadingWadFileName[i] = toupper(loadingWadFileName[i]);
             }
+
             if (strlen(loadingWadFileName) < 4 ||
                 memcmp(loadingWadFileName + strlen(loadingWadFileName) - 4, ".WAD", 4) != 0)
             {
@@ -1174,63 +1177,59 @@ void M_DrawLoadingWad(void)
             }
             else
             {
+                loadingWadFileWritten = 0;
                 char savePath[64 + 10] = "";
                 M_snprintf(savePath, sizeof(savePath), "%s/%s.tmp",
                            FS_WRITE_MOUNT_POINT, loadingWadFileName);
-                DEH_printf("Saving WAD to: %s size %d\n", savePath, loadingWadFileSize);
-                loadingWadFile = fopen(savePath, "wb");
-                loadingWadFileWritten = 0;
-                if (loadingWadFile == NULL)
+                //DEH_printf("Saving WAD to: %s size %d\n", savePath, loadingWadFileSize);
+                struct stat tmpSize;
+                if (stat(savePath, &tmpSize) == 0)
                 {
-                    DEH_printf("Cannot create file: %s\n", savePath);
+                    loadingWadFileWritten = tmpSize.st_size;
+                }
+                if (loadingWadFileWritten >= loadingWadFileSize)
+                {
+                    char toPath[64 + 10] = "";
+                    M_snprintf(toPath, sizeof(toPath), "%s/%s",
+                               FS_WRITE_MOUNT_POINT, loadingWadFileName);
+                    rename(savePath, toPath);
+                    sys_fs_sync();
                     loadingWadFinished = true;
-                    loadingWadFileName[0] = 0;
-                    unsupportedFormat = true; // Well whatever, it will show an error
+                    loadingWadFile = NULL;
+                    EM_ASM( sys_free_wad_file_data(); );
+                    DEH_printf("Saving WAD finished: %s length %d\n", toPath, loadingWadFileWritten);
+                }
+                else
+                {
+                    loadingWadFile = fopen(savePath, "ab");
+                    if (loadingWadFile == NULL)
+                    {
+                        DEH_printf("Cannot create file: %s\n", savePath);
+                        loadingWadFinished = true;
+                        loadingWadFileName[0] = 0;
+                        unsupportedFormat = true; // Well whatever, it will show an error
+                        EM_ASM( sys_free_wad_file_data(); );
+                    }
                 }
             }
         }
         if (loadingWadFile)
         {
-            if (loadingWadFileWritten < loadingWadFileSize)
-            {
-                enum { FILE_CHUNK_SIZE = 256000 };
-                int count = MIN(loadingWadFileSize - loadingWadFileWritten, FILE_CHUNK_SIZE);
+            enum { FILE_CHUNK_SIZE = 512 * 1024 };
+            int count = MIN(loadingWadFileSize - loadingWadFileWritten, FILE_CHUNK_SIZE);
 
-                unsigned char *dataPtr = (unsigned char *) EM_ASM_INT({
-                    return sys_copy_wad_file_data($0, $1);
-                }, loadingWadFileWritten, loadingWadFileWritten + count);
+            unsigned char *dataPtr = (unsigned char *) EM_ASM_INT({
+                return sys_copy_wad_file_data($0, $1);
+            }, loadingWadFileWritten, loadingWadFileWritten + count);
 
-                if (dataPtr != NULL)
-                {
-                    fwrite(dataPtr, 1, count, loadingWadFile);
-                    free(dataPtr);
-                    loadingWadFileWritten += count;
-                    if (loadingWadFileWritten % (FILE_CHUNK_SIZE * 8) == 0)
-                    {
-                        fclose(loadingWadFile);
-                        sys_fs_sync();
-                        char savePath[64 + 10] = "";
-                        M_snprintf(savePath, sizeof(savePath), "%s/%s.tmp",
-                                   FS_WRITE_MOUNT_POINT, loadingWadFileName);
-                        loadingWadFile = fopen(savePath, "ab");
-                    }
-                }
-            }
-            if (loadingWadFileWritten >= loadingWadFileSize)
+            if (dataPtr != NULL)
             {
-                EM_ASM( sys_free_wad_file_data(); );
+                loadingWadFileWritten += count;
+                fwrite(dataPtr, 1, count, loadingWadFile);
                 fclose(loadingWadFile);
-                char fromPath[64 + 10] = "";
-                char toPath[64 + 10] = "";
-                M_snprintf(fromPath, sizeof(fromPath), "%s/%s.tmp",
-                           FS_WRITE_MOUNT_POINT, loadingWadFileName);
-                M_snprintf(toPath, sizeof(toPath), "%s/%s",
-                           FS_WRITE_MOUNT_POINT, loadingWadFileName);
-                rename(fromPath, toPath);
-                sys_fs_sync();
-                loadingWadFinished = true;
                 loadingWadFile = NULL;
-                DEH_printf("Saving WAD finished, length %d\n", loadingWadFileWritten);
+                free(dataPtr);
+                sys_fs_sync();
             }
         }
     }
