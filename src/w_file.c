@@ -27,6 +27,8 @@
 
 extern wad_file_class_t stdc_wad_file;
 
+extern wad_file_class_t stdc_wad_file_chunked;
+
 #ifdef _WIN32
 extern wad_file_class_t win32_wad_file;
 #endif
@@ -43,7 +45,7 @@ static wad_file_class_t *wad_file_classes[] =
 #ifdef HAVE_MMAP
     &posix_wad_file,
 #endif
-    &stdc_wad_file,
+    &stdc_wad_file_chunked,
 };
 
 wad_file_t *W_OpenFile(char *path)
