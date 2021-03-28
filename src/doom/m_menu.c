@@ -1075,12 +1075,12 @@ void M_OpenMoreEpisodesMenu(int choice)
 void M_DrawMoreEpisodes(void)
 {
     char *wadName = cmdline_iwad;
-    if (strstr(wadName, FS_WRITE_MOUNT_POINT "/") == 0)
+    if (strstr(wadName, FS_WRITE_MOUNT_POINT "/") == wadName)
     {
         wadName += strlen(FS_WRITE_MOUNT_POINT "/");
     }
     M_WriteTextScale2x(3, 30 - LINEHEIGHT, "GAME DATA:");
-    M_WriteTextScale2x(80, 30 - LINEHEIGHT, wadName);
+    M_WriteTextScale2x(82, 30 - LINEHEIGHT, wadName);
 
     wadName = cmdline_pwad;
     if (strstr(wadName, FS_WRITE_MOUNT_POINT "/") == 0)
@@ -1092,7 +1092,7 @@ void M_DrawMoreEpisodes(void)
         wadName = "NONE";
     }
     M_WriteTextScale2x(3, 30, "MAP PACK:");
-    M_WriteTextScale2x(80, 30, wadName);
+    M_WriteTextScale2x(82, 30, wadName);
 
     M_WriteTextScale2x(48, 30 + LINEHEIGHT * 2, "OPEN GAME DATA / MAP PACK WAD");
 
