@@ -1066,7 +1066,6 @@ void M_Episode(int choice)
 //
 
 boolean downloadFreedoom2Started = false;
-boolean freedoom2Available = false;
 
 void M_OpenMoreEpisodesMenu(int choice)
 {
@@ -1075,14 +1074,33 @@ void M_OpenMoreEpisodesMenu(int choice)
 
 void M_DrawMoreEpisodes(void)
 {
-    M_WriteTextScale2x(48, 30, "GAME DATA AND MODS");
-    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 2, "OPEN GAME DATA OR MAP PACK WAD");
+    char *wadName = cmdline_iwad;
+    if (strstr(wadName, FS_WRITE_MOUNT_POINT "/") == 0)
+    {
+        wadName += strlen(FS_WRITE_MOUNT_POINT "/");
+    }
+    M_WriteTextScale2x(3, 30 - LINEHEIGHT, "GAME DATA:");
+    M_WriteTextScale2x(80, 30 - LINEHEIGHT, wadName);
+
+    wadName = cmdline_pwad;
+    if (strstr(wadName, FS_WRITE_MOUNT_POINT "/") == 0)
+    {
+        wadName += strlen(FS_WRITE_MOUNT_POINT "/");
+    }
+    if (strlen(wadName) == 0)
+    {
+        wadName = "NONE";
+    }
+    M_WriteTextScale2x(3, 30, "MAP PACK:");
+    M_WriteTextScale2x(80, 30, wadName);
+
+    M_WriteTextScale2x(48, 30 + LINEHEIGHT * 2, "OPEN GAME DATA / MAP PACK WAD");
+
     M_WriteTextScale2x(48, 30 + LINEHEIGHT * 3,
-                freedoom2Available ?
-                "OPEN FREEDOOM2.WAD" :
                 downloadFreedoom2Started ?
                 "OPEN FREEDOOM2.WAD IN DOWNLOADS APP" :
                 "DOWNLOAD FREEDOOM2.WAD (30 Mb)");
+
     M_WriteTextScale2x(48, 30 + LINEHEIGHT * 4, "OPEN FILE MANAGER APP");
 
     M_WriteTextScale2x(3, 30 + LINEHEIGHT * 6, "TO LOAD DATA FROM SD CARD, OPEN FILE MANAGER");
@@ -1100,38 +1118,14 @@ void M_MoreEpisodes(int choice)
     S_StartSound(NULL,sfx_swtchn);
     if (choice == more_ep_download_freedoom2)
     {
-        if (freedoom2Available)
+        if (!downloadFreedoom2Started)
         {
-            M_StringCopy(cmdline_iwad, FS_WRITE_MOUNT_POINT "/FREEDOOM2.WAD", FILENAME_LIMIT);
-            FILE *wadsCfg = fopen(WADS_CONFIG_PATH, "wb");
-            if (wadsCfg == NULL)
-            {
-                return;
-            }
-            fwrite(cmdline_iwad, 1, FILENAME_LIMIT, wadsCfg);
-            fwrite(cmdline_pwad, 1, FILENAME_LIMIT, wadsCfg);
-            fclose(wadsCfg);
-            sys_fs_sync();
-            // Reload using new config
-            EM_ASM({
-                setInterval(function() {
-                    if (sys_fs_sync_is_done) {
-                        location.reload();
-                    }
-                }, 100);
-            });
+            downloadFreedoom2Started = true;
+            EM_ASM( window.location.assign('https://github.com/pelya/doom-kaios/releases/download/freedoom-0.12.1/freedoom2.wad'); );
         }
         else
         {
-            if (!downloadFreedoom2Started && !freedoom2Available)
-            {
-                downloadFreedoom2Started = true;
-                EM_ASM( window.location.assign('https://github.com/pelya/doom-kaios/releases/download/freedoom-0.12.1/freedoom2.wad'); );
-            }
-            else
-            {
-                EM_ASM( sys_launch_downloads_file_picker(); );
-            }
+            EM_ASM( sys_launch_downloads_file_picker(); );
         }
     }
     if (choice == more_ep_open_file_manager)
@@ -1150,7 +1144,7 @@ void M_MoreEpisodes(int choice)
 
 boolean loadingWadFinished = false;
 FILE * loadingWadFile = NULL;
-char loadingWadFilename[FILENAME_LIMIT] = "";
+char loadingWadFileName[FILENAME_LIMIT] = "";
 int loadingWadFileSize = 0;
 int loadingWadFileWritten = 0;
 
@@ -1167,14 +1161,14 @@ void M_DrawLoadingWad(void)
 
             EM_ASM({
                 stringToUTF8(sys_open_wad_file_name, $0, lengthBytesUTF8(sys_open_wad_file_name) + 1);
-            }, loadingWadFilename);
+            }, loadingWadFileName);
 
             for (i = 0; i < FILENAME_LIMIT; i++)
             {
-                loadingWadFilename[i] = toupper(loadingWadFilename[i]);
+                loadingWadFileName[i] = toupper(loadingWadFileName[i]);
             }
-            if (strlen(loadingWadFilename) < 4 ||
-                memcmp(loadingWadFilename + strlen(loadingWadFilename) - 4, ".WAD", 4) != 0)
+            if (strlen(loadingWadFileName) < 4 ||
+                memcmp(loadingWadFileName + strlen(loadingWadFileName) - 4, ".WAD", 4) != 0)
             {
                 unsupportedFormat = true;
             }
@@ -1182,7 +1176,7 @@ void M_DrawLoadingWad(void)
             {
                 char savePath[64 + 10] = "";
                 M_snprintf(savePath, sizeof(savePath), "%s/%s.tmp",
-                    FS_WRITE_MOUNT_POINT, loadingWadFilename);
+                           FS_WRITE_MOUNT_POINT, loadingWadFileName);
                 DEH_printf("Saving WAD to: %s size %d\n", savePath, loadingWadFileSize);
                 loadingWadFile = fopen(savePath, "wb");
                 loadingWadFileWritten = 0;
@@ -1190,7 +1184,7 @@ void M_DrawLoadingWad(void)
                 {
                     DEH_printf("Cannot create file: %s\n", savePath);
                     loadingWadFinished = true;
-                    loadingWadFilename[0] = 0;
+                    loadingWadFileName[0] = 0;
                     unsupportedFormat = true; // Well whatever, it will show an error
                 }
             }
@@ -1217,7 +1211,7 @@ void M_DrawLoadingWad(void)
                         sys_fs_sync();
                         char savePath[64 + 10] = "";
                         M_snprintf(savePath, sizeof(savePath), "%s/%s.tmp",
-                                   FS_WRITE_MOUNT_POINT, loadingWadFilename);
+                                   FS_WRITE_MOUNT_POINT, loadingWadFileName);
                         loadingWadFile = fopen(savePath, "ab");
                     }
                 }
@@ -1229,9 +1223,9 @@ void M_DrawLoadingWad(void)
                 char fromPath[64 + 10] = "";
                 char toPath[64 + 10] = "";
                 M_snprintf(fromPath, sizeof(fromPath), "%s/%s.tmp",
-                    FS_WRITE_MOUNT_POINT, loadingWadFilename);
+                           FS_WRITE_MOUNT_POINT, loadingWadFileName);
                 M_snprintf(toPath, sizeof(toPath), "%s/%s",
-                    FS_WRITE_MOUNT_POINT, loadingWadFilename);
+                           FS_WRITE_MOUNT_POINT, loadingWadFileName);
                 rename(fromPath, toPath);
                 sys_fs_sync();
                 loadingWadFinished = true;
@@ -1242,11 +1236,11 @@ void M_DrawLoadingWad(void)
     }
 
     char text[FILENAME_LIMIT + 20] = "";
-    M_snprintf(text, sizeof(text), "IMPORTING %s", loadingWadFilename);
+    M_snprintf(text, sizeof(text), "IMPORTING %s", loadingWadFileName);
     M_WriteTextScale2x(38, 30, text);
     if (loadingWadFinished)
     {
-        M_snprintf(text, sizeof(text), "OPEN %s", loadingWadFilename);
+        M_snprintf(text, sizeof(text), "OPEN %s", loadingWadFileName);
     }
     else if (unsupportedFormat)
     {
@@ -1280,7 +1274,7 @@ void M_LoadingWad(int choice)
             S_StartSound(NULL,sfx_swtchn);
             char wadHeader[4] = "";
             char wadPath[FILENAME_LIMIT] = "";
-            M_snprintf(wadPath, sizeof(wadPath), "%s/%s", FS_WRITE_MOUNT_POINT, loadingWadFilename);
+            M_snprintf(wadPath, sizeof(wadPath), "%s/%s", FS_WRITE_MOUNT_POINT, loadingWadFileName);
             FILE *wadFile = fopen(wadPath, "rb");
             if (wadFile == NULL)
             {
@@ -1325,6 +1319,11 @@ void M_LoadingWad(int choice)
     {
         S_StartSound(NULL,sfx_swtchn);
         EM_ASM( sys_free_wad_file_data(); );
+        char savePath[64 + 10] = "";
+        M_snprintf(savePath, sizeof(savePath), "%s/%s.tmp",
+                   FS_WRITE_MOUNT_POINT, loadingWadFileName);
+        remove(savePath);
+        sys_fs_sync();
         M_SetupNextMenu(&MainDef);
     }
 }
@@ -1489,7 +1488,7 @@ void M_DrawOptions(void)
                                       PU_CACHE));
 
     M_WriteTextScale2x(OptionsDef.x, OptionsDef.y + 1 + LINEHEIGHT * moreepisodes,
-                       "GAME DATA AND MODS");
+                       "GAME DATA AND MAP PACKS");
 
     M_DrawThermo(OptionsDef.x,OptionsDef.y+LINEHEIGHT*(scrnsize+1),
 		 9,screenSize);
@@ -2692,17 +2691,10 @@ void M_Init (void)
 
     opldev = M_CheckParm("-opldev") > 0;
 
-    int wadAvailable = EM_ASM_INT( return sys_is_wad_file_available(); );
-    if (wadAvailable)
+    if ((EM_ASM_INT( return sys_is_wad_file_available(); )))
     {
         menuactive = 1;
         M_SetupNextMenu(&LoadingWadDef);
-    }
-    FILE * freedoom2 = fopen(FS_WRITE_MOUNT_POINT "/FREEDOOM2.WAD", "rb");
-    if (freedoom2)
-    {
-        freedoom2Available = true;
-        fclose(freedoom2);
     }
 }
 
