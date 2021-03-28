@@ -1197,6 +1197,7 @@ void M_DrawLoadingWad(void)
                     loadingWadFinished = true;
                     loadingWadFile = NULL;
                     EM_ASM( sys_free_wad_file_data(); );
+                    sys_free_wake_lock();
                     DEH_printf("Saving WAD finished: %s length %d\n", toPath, loadingWadFileWritten);
                 }
                 else
