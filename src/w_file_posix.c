@@ -49,7 +49,7 @@ static void MapFile(posix_wad_file_t *wad, char *filename)
     // change the WAD files after being read.  However, there may
     // be code lurking in the source that does.
 
-    protection = PROT_READ|PROT_WRITE;
+    protection = PROT_READ;
 
     // Writes to the mapped area result in private changes that are
     // *not* written to disk.
@@ -115,7 +115,10 @@ static void W_POSIX_CloseFile(wad_file_t *wad)
     // If mapped, unmap it.
 
     // Close the file
-  
+    if (posix_wad->wad.mapped != NULL)
+    {
+        munmap(posix_wad->wad.mapped, posix_wad->wad.length);
+    }
     close(posix_wad->handle);
     Z_Free(posix_wad);
 }
