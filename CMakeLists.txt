@@ -18,6 +18,9 @@ set(CMAKE_C_FLAGS " \
     -Wno-macro-redefined \
     -Wno-switch \
     -Wno-invalid-pp-token \
+    -Werror=format \
+    -Werror=format-security \
+    -Werror=format-nonliteral \
     -s WASM=0 \
     -s USE_SDL=2 \
     -s USE_LIBPNG=1 \
@@ -27,6 +30,9 @@ set(CMAKE_C_FLAGS " \
     -s FORCE_FILESYSTEM=1 \
     --no-heap-copy \
     --preload-file ${CMAKE_CURRENT_LIST_DIR}/freedoom1.wad@freedoom1.wad \
+    --preload-file ${CMAKE_CURRENT_LIST_DIR}/freedoom1.wad.1@freedoom1.wad.1 \
+    --preload-file ${CMAKE_CURRENT_LIST_DIR}/freedoom1.wad.2@freedoom1.wad.2 \
+    --preload-file ${CMAKE_CURRENT_LIST_DIR}/freedoom1.wad.3@freedoom1.wad.3 \
 ")
 
 add_executable(doom ${SRC_FILES})
