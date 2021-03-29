@@ -23,6 +23,7 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <assert.h>
 
 
 #include "doomdef.h"
@@ -185,6 +186,7 @@ static void M_NewGame(int choice);
 static void M_Episode(int choice);
 static void M_MoreEpisodes(int choice);
 static void M_LoadingWad(int choice);
+static void M_OpenLoadingWadMenu(void);
 static void M_SelectWad(int choice);
 static void M_OpenSelectWadMenu(void);
 static void M_ChooseSkill(int choice);
@@ -1111,7 +1113,7 @@ void M_DrawMoreEpisodes(void)
     int wadAvailable = EM_ASM_INT( return sys_is_wad_file_available(); );
     if (wadAvailable)
     {
-        M_SetupNextMenu(&LoadingWadDef);
+        M_OpenLoadingWadMenu();
     }
 }
 
@@ -1150,6 +1152,13 @@ char loadingWadFileName[FILENAME_LIMIT] = "";
 int loadingWadFileSize = 0;
 int loadingWadFileWritten = 0;
 
+void M_OpenLoadingWadMenu(void)
+{
+    M_SetupNextMenu(&LoadingWadDef);
+    loadingWadFileWritten = 0;
+    sys_take_wake_lock();
+}
+
 void M_DrawLoadingWad(void)
 {
     boolean unsupportedFormat = false;
@@ -1177,19 +1186,16 @@ void M_DrawLoadingWad(void)
             }
             else
             {
-                loadingWadFileWritten = 0;
+                int count = loadingWadFileWritten / FS_MAX_FILE_SIZE;
                 char savePath[64 + 10] = "";
-                M_snprintf(savePath, sizeof(savePath), "%s/%s.tmp",
-                           FS_WRITE_MOUNT_POINT, loadingWadFileName);
-                //DEH_printf("Saving WAD to: %s size %d\n", savePath, loadingWadFileSize);
-                struct stat tmpSize;
-                if (stat(savePath, &tmpSize) == 0)
-                {
-                    loadingWadFileWritten = tmpSize.st_size;
-                }
+                M_snprintf(savePath, sizeof(savePath), "%s/%s.%d",
+                           FS_WRITE_MOUNT_POINT, loadingWadFileName, count);
+                DEH_printf("Saving WAD to: %s total size %d written %d\n", savePath, loadingWadFileSize, loadingWadFileWritten);
                 if (loadingWadFileWritten >= loadingWadFileSize)
                 {
                     char toPath[64 + 10] = "";
+                    M_snprintf(savePath, sizeof(savePath), "%s/%s.0",
+                               FS_WRITE_MOUNT_POINT, loadingWadFileName);
                     M_snprintf(toPath, sizeof(toPath), "%s/%s",
                                FS_WRITE_MOUNT_POINT, loadingWadFileName);
                     rename(savePath, toPath);
@@ -1202,7 +1208,7 @@ void M_DrawLoadingWad(void)
                 }
                 else
                 {
-                    loadingWadFile = fopen(savePath, "ab");
+                    loadingWadFile = fopen(savePath, "wb");
                     if (loadingWadFile == NULL)
                     {
                         DEH_printf("Cannot create file: %s\n", savePath);
@@ -1216,7 +1222,9 @@ void M_DrawLoadingWad(void)
         }
         if (loadingWadFile)
         {
-            enum { FILE_CHUNK_SIZE = 512 * 1024 };
+            enum { FILE_CHUNK_SIZE = FS_MAX_FILE_SIZE / 16 }; // 512 Kb chunk
+            assert(FILE_CHUNK_SIZE * 16 == FS_MAX_FILE_SIZE);
+
             int count = MIN(loadingWadFileSize - loadingWadFileWritten, FILE_CHUNK_SIZE);
 
             unsigned char *dataPtr = (unsigned char *) EM_ASM_INT({
@@ -1227,10 +1235,15 @@ void M_DrawLoadingWad(void)
             {
                 loadingWadFileWritten += count;
                 fwrite(dataPtr, 1, count, loadingWadFile);
-                fclose(loadingWadFile);
-                loadingWadFile = NULL;
                 free(dataPtr);
-                sys_fs_sync();
+                if (loadingWadFileWritten % FS_MAX_FILE_SIZE == 0
+                    || loadingWadFileWritten >= loadingWadFileSize)
+                {
+                    DEH_printf("Saving WAD - closing chunk, total written %d\n", loadingWadFileWritten);
+                    fclose(loadingWadFile);
+                    loadingWadFile = NULL;
+                    sys_fs_sync();
+                }
             }
         }
     }
@@ -2687,8 +2700,7 @@ void M_Init (void)
     if ((EM_ASM_INT( return sys_is_wad_file_available(); )))
     {
         menuactive = 1;
-        M_SetupNextMenu(&LoadingWadDef);
-        sys_take_wake_lock();
+        M_OpenLoadingWadMenu();
     }
 }
 
