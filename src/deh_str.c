@@ -394,7 +394,10 @@ void DEH_printf(const char *fmt, ...)
 
     va_start(args, fmt);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
     vprintf(repl, args);
+#pragma GCC diagnostic pop
 
     va_end(args);
 }
@@ -410,7 +413,10 @@ void DEH_fprintf(FILE *fstream, const char *fmt, ...)
 
     va_start(args, fmt);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
     vfprintf(fstream, repl, args);
+#pragma GCC diagnostic pop
 
     va_end(args);
 }

@@ -57,6 +57,10 @@ char *M_OEMToUTF8(const char *ansi);
 #define FS_WRITE_MOUNT_POINT "."
 #endif
 
+// On KaiOS IndexedDB refuses to save files bigger than 16 Mb
+// So we split the data into 8 Mb chunks
+#define FS_MAX_FILE_SIZE (8 * 1024 * 1024)
+
 extern void sys_fs_init(void);
 extern int sys_fs_init_get_done(void);
 extern void sys_fs_sync(void);

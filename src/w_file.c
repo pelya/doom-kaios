@@ -45,7 +45,7 @@ static wad_file_class_t *wad_file_classes[] =
 #ifdef HAVE_MMAP
     &posix_wad_file,
 #endif
-    &stdc_wad_file_chunked,
+    &stdc_wad_file
 };
 
 wad_file_t *W_OpenFile(char *path)
@@ -59,6 +59,10 @@ wad_file_t *W_OpenFile(char *path)
     // Use the OS's virtual memory subsystem to map WAD files
     // directly into memory.
     //
+
+#ifdef EMSCRIPTEN
+    return stdc_wad_file_chunked.OpenFile(path);
+#endif
 
     if (!M_CheckParm("-mmap"))
     {

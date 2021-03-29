@@ -1119,7 +1119,7 @@ void WritePNGfile(char *filename, pixel_t *data,
 // V_ScreenShot
 //
 
-void V_ScreenShot(const char *format)
+void V_ScreenShot(void)
 {
     int i;
     char lbmname[16]; // haleyjd 20110213: BUG FIX - 12 is too small!
@@ -1141,7 +1141,7 @@ void V_ScreenShot(const char *format)
 
     for (i=0; i<=9999; i++) // [crispy] increase screenshot filename limit
     {
-        M_snprintf(lbmname, sizeof(lbmname), format, i, ext);
+        M_snprintf(lbmname, sizeof(lbmname), "DOOM%02i.%s", i, ext);
 
         if (!M_FileExists(lbmname))
         {

@@ -823,8 +823,11 @@ static char *GetGameName(char *gamename)
             gamename_size = strlen(deh_sub) + 10;
             gamename = Z_Malloc(gamename_size, PU_STATIC, 0);
             version = G_VanillaVersionCode();
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
             M_snprintf(gamename, gamename_size, deh_sub,
                        version / 100, version % 100);
+#pragma GCC diagnostic pop
 
             while (gamename[0] != '\0' && isspace(gamename[0]))
             {

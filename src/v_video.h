@@ -116,11 +116,10 @@ void V_UseBuffer(pixel_t *buffer);
 
 void V_RestoreBuffer(void);
 
-// Save a screenshot of the current screen to a file, named in the 
-// format described in the string passed to the function, eg.
-// "DOOM%02i.pcx"
+// Save a screenshot of the current screen to a file, named in the
+// format "DOOM%02i.pcx"
 
-void V_ScreenShot(const char *format);
+void V_ScreenShot(void);
 
 // Load the lookup table for translucency calculations from the TINTTAB
 // lump.
