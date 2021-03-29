@@ -1200,11 +1200,30 @@ void M_DrawLoadingWad(void)
             }
             else
             {
-                int count = loadingWadFileWritten / FS_MAX_FILE_SIZE;
                 char savePath[64 + 10] = "";
+                int count = loadingWadFileWritten / FS_MAX_FILE_SIZE;
                 M_snprintf(savePath, sizeof(savePath), "%s/%s.%d",
                            FS_WRITE_MOUNT_POINT, loadingWadFileName, count);
-                DEH_printf("Saving WAD to: %s total size %d written %d\n", savePath, loadingWadFileSize, loadingWadFileWritten);
+                if (loadingWadFileWritten == 0)
+                {
+                    DEH_printf("Saving WAD to: %s total size %d written %d\n", savePath, loadingWadFileSize, loadingWadFileWritten);
+                    while (true)
+                    {
+                        struct stat tmpSize;
+                        if (stat(savePath, &tmpSize) == 0 && tmpSize.st_size == FS_MAX_FILE_SIZE)
+                        {
+                            loadingWadFileWritten += FS_MAX_FILE_SIZE;
+                            count++;
+                        }
+                        else
+                        {
+                            remove(savePath);
+                            break;
+                        }
+                        M_snprintf(savePath, sizeof(savePath), "%s/%s.%d",
+                                   FS_WRITE_MOUNT_POINT, loadingWadFileName, count);
+                    }
+                }
                 if (loadingWadFileWritten >= loadingWadFileSize)
                 {
                     char toPath[64 + 10] = "";
@@ -1222,7 +1241,7 @@ void M_DrawLoadingWad(void)
                 }
                 else
                 {
-                    loadingWadFile = fopen(savePath, "wb");
+                    loadingWadFile = fopen(savePath, "ab");
                     if (loadingWadFile == NULL)
                     {
                         DEH_printf("Cannot create file: %s\n", savePath);
@@ -1250,14 +1269,10 @@ void M_DrawLoadingWad(void)
                 loadingWadFileWritten += count;
                 fwrite(dataPtr, 1, count, loadingWadFile);
                 free(dataPtr);
-                if (loadingWadFileWritten % FS_MAX_FILE_SIZE == 0
-                    || loadingWadFileWritten >= loadingWadFileSize)
-                {
-                    DEH_printf("Saving WAD - closing chunk, total written %d\n", loadingWadFileWritten);
-                    fclose(loadingWadFile);
-                    loadingWadFile = NULL;
-                    sys_fs_sync();
-                }
+                //DEH_printf("Saving WAD - closing chunk, total written %d\n", loadingWadFileWritten);
+                fclose(loadingWadFile);
+                loadingWadFile = NULL;
+                sys_fs_sync();
             }
         }
     }
