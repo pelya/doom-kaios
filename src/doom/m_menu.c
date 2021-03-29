@@ -1174,6 +1174,9 @@ void M_OpenLoadingWadMenu(void)
 
 void M_DrawLoadingWad(void)
 {
+    enum { FILE_CHUNK_SIZE = FS_MAX_FILE_SIZE / 16 }; // 512 Kb chunk
+    assert(FILE_CHUNK_SIZE * 16 == FS_MAX_FILE_SIZE);
+
     boolean unsupportedFormat = false;
     int i;
 
@@ -1217,7 +1220,16 @@ void M_DrawLoadingWad(void)
                         }
                         else
                         {
-                            remove(savePath);
+                            if (tmpSize.st_size > FS_MAX_FILE_SIZE
+                                || !(tmpSize.st_size % FILE_CHUNK_SIZE == 0
+                                || loadingWadFileSize / FS_MAX_FILE_SIZE == count))
+                            {
+                                remove(savePath);
+                            }
+                            else
+                            {
+                                loadingWadFileWritten += tmpSize.st_size;
+                            }
                             break;
                         }
                         M_snprintf(savePath, sizeof(savePath), "%s/%s.%d",
@@ -1255,9 +1267,6 @@ void M_DrawLoadingWad(void)
         }
         if (loadingWadFile)
         {
-            enum { FILE_CHUNK_SIZE = FS_MAX_FILE_SIZE / 16 }; // 512 Kb chunk
-            assert(FILE_CHUNK_SIZE * 16 == FS_MAX_FILE_SIZE);
-
             int count = MIN(loadingWadFileSize - loadingWadFileWritten, FILE_CHUNK_SIZE);
 
             unsigned char *dataPtr = (unsigned char *) EM_ASM_INT({
