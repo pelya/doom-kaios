@@ -8,7 +8,7 @@ export LD_LIBRARY_PATH=~/bin/xulrunner-sdk/bin
 
 
 FOLDER="$1"
-[ -z "$FOLDER" ] && FOLDER=release
+[ -z "$FOLDER" ] && FOLDER=debug
 ID=doom
 
 adb push ${FOLDER}/application.zip /data/local/tmp/b2g/$ID/application.zip || exit 1

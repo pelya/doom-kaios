@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DIR="$1"
-[ -z "$DIR" ] && DIR=release
+[ -z "$DIR" ] && DIR=debug
 cd $DIR || exit 1
 
 LEVEL=

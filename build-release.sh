@@ -8,6 +8,7 @@
 
 source "$PATH_EMSDK/emsdk_env.sh"
 
+rm -rf release
 mkdir -p release
 cd release
 

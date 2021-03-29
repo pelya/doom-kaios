@@ -37,14 +37,13 @@
       var sys_open_wad_file_buffer = null;
       var sys_open_wad_file_reader = null;
       // Debug text window
-      var outputElement = document.getElementById('output');
       var sys_debug = 0;
 
       if (sys_debug) {
         document.getElementById('canvas').style.height = "65%";
       } else {
-        outputElement.hidden = true;
-        outputElement.style.display = "none";
+        document.getElementById('output').hidden = true;
+        document.getElementById('output').style.display = "none";
       }
 
       var Module = {
@@ -52,7 +51,7 @@
         postRun: [],
 
         print: (function() {
-          var outputElement = document.getElementById('output');
+          const outputElement = document.getElementById('output');
           if (outputElement) outputElement.value = ''; // clear browser cache
           return function(text) {
             if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
