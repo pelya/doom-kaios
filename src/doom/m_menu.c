@@ -1321,10 +1321,6 @@ void M_LoadingWad(int choice)
     {
         S_StartSound(NULL,sfx_swtchn);
         EM_ASM( sys_free_wad_file_data(); );
-        char savePath[64 + 10] = "";
-        M_snprintf(savePath, sizeof(savePath), "%s/%s.tmp",
-                   FS_WRITE_MOUNT_POINT, loadingWadFileName);
-        remove(savePath);
         sys_fs_sync();
         sys_free_wake_lock();
         M_SetupNextMenu(&MainDef);
@@ -1367,7 +1363,7 @@ static void M_SelectWadReadDirectory(void)
         M_StringCopy(selectWadText[idx - selectWadNextCounter], wadFile->d_name, FILENAME_LIMIT);
         if (idx - selectWadNextCounter >= select_wad_next)
         {
-            M_StringCopy(selectWadText[select_wad_next], "NEXT", FILENAME_LIMIT);
+            M_StringCopy(selectWadText[select_wad_next], "NEXT PAGE", FILENAME_LIMIT);
             break;
         }
     }
@@ -1403,7 +1399,7 @@ void M_SelectWad(int choice)
         M_StringCopy(cmdline_pwad, "", FILENAME_LIMIT);
         writeCfg = true;
     }
-    else if (choice == select_wad_next && strcmp(selectWadText[select_wad_next], "NEXT") == 0)
+    else if (choice == select_wad_next && strcmp(selectWadText[select_wad_next], "NEXT PAGE") == 0)
     {
         S_StartSound(NULL,sfx_swtchn);
         selectWadNextCounter += select_wad_next;
