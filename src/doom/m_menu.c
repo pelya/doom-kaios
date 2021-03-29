@@ -1271,7 +1271,8 @@ void M_DrawLoadingWad(void)
     }
     else if (unsupportedFormat)
     {
-        M_snprintf(text, sizeof(text), "ERROR: ONLY .WAD AND .DEH FILES ARE SUPPORTED");
+        M_snprintf(text, sizeof(text), "ERROR: ONLY .WAD AND .DEH FILES");
+        M_WriteTextScale2x(48, 30 + LINEHEIGHT * 3, "ARE SUPPORTED");
     }
     else
     {
