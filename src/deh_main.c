@@ -465,7 +465,7 @@ void DEH_ParseCommandLine(void)
     {
         ++p;
 
-        while (p < myargc && myargv[p][0] != '-')
+        while (p < myargc && myargv[p][0] != 0 && myargv[p][0] != '-')
         {
             filename = D_TryFindWADByName(myargv[p]);
             DEH_LoadFile(filename);

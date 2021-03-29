@@ -1462,12 +1462,14 @@ void D_DoomMain (void)
             fileName[i] = toupper(fileName[i]);
         }
 
-        if (strlen(fileName) < 4 ||
-            memcmp(fileName + strlen(fileName) - 4, ".WAD", 4) != 0)
+        if (strlen(fileName) < 4
+            || (memcmp(fileName + strlen(fileName) - 4, ".WAD", 4) != 0
+            && memcmp(fileName + strlen(fileName) - 4, ".DEH", 4) != 0))
         {
             // An error message will be shown in the WAD import menu, use fallback WAD for the game
             M_StringCopy(cmdline_iwad, "freedoom1.wad", FILENAME_LIMIT);
             M_StringCopy(cmdline_pwad, "", FILENAME_LIMIT);
+            M_StringCopy(cmdline_deh, "", FILENAME_LIMIT);
         }
         else
         {
@@ -1479,8 +1481,8 @@ void D_DoomMain (void)
             {
                 // WAD file already imported, load it right now
                 EM_ASM( sys_free_wad_file_data(); );
-                char wadHeader[4] = "";
-                fread(wadHeader, 1, 4, wadFile);
+                char wadHeader[5] = "";
+                fread(wadHeader, 1, 5, wadFile);
                 // Check file size some other time
                 //fseek(wadFile, 0, SEEK_END);
                 //int wadSize = (int) ftell(wadFile);
@@ -1490,17 +1492,23 @@ void D_DoomMain (void)
                 {
                     M_StringCopy(cmdline_iwad, wadPath, FILENAME_LIMIT);
                     M_StringCopy(cmdline_pwad, "", FILENAME_LIMIT);
+                    M_StringCopy(cmdline_deh, "", FILENAME_LIMIT);
                 }
                 if (memcmp(wadHeader, "PWAD", 4) == 0)
                 {
                     M_StringCopy(cmdline_pwad, wadPath, FILENAME_LIMIT);
                 }
-                DEH_printf("Saving %s IWAD %s PWAD %s\n", WADS_CONFIG_PATH, cmdline_iwad, cmdline_pwad);
+                if (memcmp(wadHeader, "Patch", 5) == 0)
+                {
+                    M_StringCopy(cmdline_deh, wadPath, FILENAME_LIMIT);
+                }
+                DEH_printf("Saving %s IWAD %s PWAD %s DEH %s\n", WADS_CONFIG_PATH, cmdline_iwad, cmdline_pwad, cmdline_deh);
                 FILE *wadsCfg = fopen(WADS_CONFIG_PATH, "wb");
                 if (wadsCfg != NULL)
                 {
                     fwrite(cmdline_iwad, 1, FILENAME_LIMIT, wadsCfg);
                     fwrite(cmdline_pwad, 1, FILENAME_LIMIT, wadsCfg);
+                    fwrite(cmdline_deh, 1, FILENAME_LIMIT, wadsCfg);
                     fclose(wadsCfg);
                     sys_fs_sync();
                 }
@@ -1510,6 +1518,7 @@ void D_DoomMain (void)
                 // Use fallback WAD when importing new WAD file, in case we import broken WAD and the game fails to load
                 M_StringCopy(cmdline_iwad, "freedoom1.wad", FILENAME_LIMIT);
                 M_StringCopy(cmdline_pwad, "", FILENAME_LIMIT);
+                M_StringCopy(cmdline_deh, "", FILENAME_LIMIT);
             }
         }
     }
@@ -1520,8 +1529,9 @@ void D_DoomMain (void)
         {
             fread(cmdline_iwad, 1, FILENAME_LIMIT, wadsCfg);
             fread(cmdline_pwad, 1, FILENAME_LIMIT, wadsCfg);
+            fread(cmdline_deh, 1, FILENAME_LIMIT, wadsCfg);
             fclose(wadsCfg);
-            DEH_printf("Using IWAD %s PWAD %s\n", cmdline_iwad, cmdline_pwad);
+            DEH_printf("Using IWAD %s PWAD %s DEH %s\n", cmdline_iwad, cmdline_pwad, cmdline_deh);
         }
     }
 

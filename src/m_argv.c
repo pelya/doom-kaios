@@ -29,6 +29,7 @@
 
 char	cmdline_iwad[FILENAME_LIMIT] = "freedoom1.wad";
 char	cmdline_pwad[FILENAME_LIMIT] = "";
+char	cmdline_deh[FILENAME_LIMIT] = "";
 
 static char *cmdline[] = {
     "doom",
@@ -40,6 +41,8 @@ static char *cmdline[] = {
     cmdline_iwad,
     "-file",
     cmdline_pwad,
+    "-deh",
+    cmdline_deh,
 };
 
 int		myargc = sizeof(cmdline) / sizeof(cmdline[0]);

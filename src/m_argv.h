@@ -33,6 +33,7 @@ extern  int	myargc;
 extern  char**	myargv;
 extern  char	cmdline_iwad[FILENAME_LIMIT];
 extern  char	cmdline_pwad[FILENAME_LIMIT];
+extern  char	cmdline_deh[FILENAME_LIMIT];
 
 // Returns the position of the given parameter
 // in the arg list (0 if not found).

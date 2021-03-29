@@ -42,7 +42,7 @@
         },
         "filename": {
           "required": true,
-          "pattern": "^.*\\.wad$",
+          "pattern": "^.*\\.(wad|deh)$",
           "patternFlags": "i"
         }
       },
@@ -56,7 +56,7 @@
       },
       "filenames": {
         "required": true,
-        "pattern": "^.*\\.wad$",
+        "pattern": "^.*\\.(wad|deh)$",
         "patternFlags": "i"
       },
       "disposition": "window",
