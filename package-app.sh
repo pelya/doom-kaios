@@ -7,7 +7,7 @@ cd $DIR || exit 1
 LEVEL=
 [ "$DIR" = "release" ] && LEVEL=-9
 
-cp -f *.html *.js *.mem *.data /var/www/html
+cp -f *.html *.js *.mem *.data *.wasm /var/www/html
 
 rm -f application.zip
 zip $LEVEL application.zip *.html *.js *.mem *.data

@@ -65,7 +65,8 @@ extern sound_module_t sound_sdl_module;
 
 // For OPL module:
 
-extern int opl_io_port;
+int opl_io_port = 0x388;
+char *snd_dmxoption = "";
 
 // DOS-specific options: These are unused but should be maintained
 // so that the config file can be shared between chocolate
