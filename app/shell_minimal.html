@@ -39,6 +39,14 @@
       // Debug text window
       var sys_debug = 0;
 
+      window.onerror = function (errorMsg) {
+        alert("Error occured: " + errorMsg);
+        return false;
+      }
+      window.addEventListener('unhandledrejection', function (errorMsg) {
+        alert("Error occurred: " + errorMsg.reason.message);
+      });
+
       if (sys_debug) {
         document.getElementById('canvas').style.height = "65%";
       } else {
@@ -55,8 +63,8 @@
           if (outputElement) outputElement.value = ''; // clear browser cache
           return function(text) {
             if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+            console.log(text);
             if (outputElement && !outputElement.hidden) {
-              console.log(text);
               outputElement.value = text + '\n' + outputElement.value;
             }
           };
