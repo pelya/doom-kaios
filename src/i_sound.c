@@ -62,12 +62,9 @@ int snd_sfxdevice = SNDDEVICE_SB;
 // Sound modules
 
 extern sound_module_t sound_sdl_module;
-extern music_module_t music_opl_module;
-extern music_module_t music_web_module;
 
 // For OPL module:
 
-extern opl_driver_ver_t opl_drv_ver;
 extern int opl_io_port;
 
 // DOS-specific options: These are unused but should be maintained
@@ -91,8 +88,10 @@ static sound_module_t *sound_modules[] =
 
 static music_module_t *music_modules[] =
 {
+#ifdef HAVE_MUSIC
     &music_web_module,
     &music_opl_module,
+#endif
     NULL,
 };
 

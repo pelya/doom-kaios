@@ -2530,39 +2530,6 @@ void M_StartControlPanel (void)
     itemOn = currentMenu->lastOn;   // JDC
 }
 
-// Display OPL debug messages - hack for GENMIDI development.
-
-static void M_DrawOPLDev(void)
-{
-    extern void I_OPL_DevMessages(char *, size_t);
-    char debug[1024];
-    char *curr, *p;
-    int line;
-
-    I_OPL_DevMessages(debug, sizeof(debug));
-    curr = debug;
-    line = 0;
-
-    for (;;)
-    {
-        p = strchr(curr, '\n');
-
-        if (p != NULL)
-        {
-            *p = '\0';
-        }
-
-        M_WriteText(0, line * 8, curr);
-        ++line;
-
-        if (p == NULL)
-        {
-            break;
-        }
-
-        curr = p + 1;
-    }
-}
 
 //
 // M_Drawer
@@ -2619,11 +2586,6 @@ void M_Drawer (void)
 	}
 
 	return;
-    }
-
-    if (opldev)
-    {
-        M_DrawOPLDev();
     }
 
     if (!menuactive)

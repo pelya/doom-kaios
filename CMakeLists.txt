@@ -4,8 +4,6 @@ project(wasm-doom)
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 
 include_directories(
-    gifenc
-    opl
     sdl_mixer
     src
     src/doom
