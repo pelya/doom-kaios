@@ -1261,8 +1261,6 @@ void PrintGameVersion(void)
 
 static void D_Endoom(void)
 {
-    byte *endoom;
-
     // Don't show ENDOOM if we have it disabled, or we're running
     // in screensaver or control test mode. Only show it once the
     // game has actually started.
