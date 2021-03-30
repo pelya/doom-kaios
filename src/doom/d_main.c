@@ -52,7 +52,6 @@
 #include "m_menu.h"
 #include "p_saveg.h"
 
-#include "i_endoom.h"
 #include "i_input.h"
 #include "i_joystick.h"
 #include "i_system.h"
@@ -1275,9 +1274,9 @@ static void D_Endoom(void)
         return;
     }
 
-    endoom = W_CacheLumpName(DEH_String("ENDOOM"), PU_STATIC);
+    //endoom = W_CacheLumpName(DEH_String("ENDOOM"), PU_STATIC);
 
-    I_Endoom(endoom);
+    //I_Endoom(endoom);
 }
 
 // Load dehacked patches needed for certain IWADs.
