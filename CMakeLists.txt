@@ -23,7 +23,6 @@ set(CMAKE_C_FLAGS " \
     -Werror=format-nonliteral \
     -s WASM=0 \
     -s USE_SDL=2 \
-    -s USE_LIBPNG=1 \
     -s ALLOW_MEMORY_GROWTH=1 \
     -s INITIAL_MEMORY=41943040 \
     -s NO_EXIT_RUNTIME=1 \

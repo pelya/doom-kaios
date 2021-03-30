@@ -3,7 +3,7 @@
 
 #define HAVE_DECL_STRCASECMP 1
 #define HAVE_DECL_STRNCASECMP 1
-#define HAVE_LIBPNG
+//#define HAVE_LIBPNG
 //#define HAVE_MMAP
 
 /* Name of package */

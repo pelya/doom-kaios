@@ -71,7 +71,6 @@
 
 
 #include "d_main.h"
-#include "i_gif.h"
 
 #include <emscripten.h>
 
