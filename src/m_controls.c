@@ -26,13 +26,13 @@
 // Keyboard controls
 //
 
-int key_right = '4';
-int key_left = '1';
+int key_right = '2';
+int key_left = '5';
 
 int key_up = '0';
 int key_down = KEYP_MULTIPLY;
-int key_strafeleft = '2';
-int key_straferight = '5';
+int key_strafeleft = '1';
+int key_straferight = '4';
 int key_fire = '7';
 int key_fire_alt = '8'; // Alternative Fire key
 int key_fire_dup = '9'; // Duplicate Fire key
@@ -141,7 +141,7 @@ int key_map_east      = KEY_DOWNARROW;
 int key_map_west      = KEY_UPARROW;
 int key_map_zoomin    = '3';
 int key_map_zoomout   = '6';
-int key_map_toggle    = KEY_ENTER;
+int key_map_toggle    = KEYP_ENTER;
 int key_map_maxzoom   = 'z';
 int key_map_follow    = '7';
 int key_map_grid      = 'c';
@@ -172,7 +172,7 @@ int key_menu_qload     = KEY_F9;
 int key_menu_quit      = KEY_F10;
 int key_menu_gamma     = KEY_F11;
 
-int key_menu_incscreen = KEYP_ENTER;
+int key_menu_incscreen = KEY_EQUALS;
 int key_menu_decscreen = KEY_MINUS;
 int key_menu_screenshot = 0;
 
