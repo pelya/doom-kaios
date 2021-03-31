@@ -19,9 +19,14 @@
  
 extern int key_right;
 extern int key_left;
-
 extern int key_up;
 extern int key_down;
+extern int key_right_alt;
+extern int key_left_alt;
+extern int key_up_alt;
+extern int key_down_alt;
+extern int key_up_dup;
+extern int key_down_dup;
 extern int key_strafeleft;
 extern int key_straferight;
 extern int key_fire;

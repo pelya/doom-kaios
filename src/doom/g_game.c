@@ -404,11 +404,11 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
 	    cmd->angleturn += -joyxmove >> (6 - speed);
     } 
  
-    if (gamekeydown[key_up] || gamekeydown[key_up_alt]) 
+    if (gamekeydown[key_up] || gamekeydown[key_up_alt] || gamekeydown[key_up_dup])
     {
 	forward += forwardmove[speed]; 
     }
-    if (gamekeydown[key_down] || gamekeydown[key_down_alt]) 
+    if (gamekeydown[key_down] || gamekeydown[key_down_alt] || gamekeydown[key_down_dup])
     {
 	forward -= forwardmove[speed]; 
     }
