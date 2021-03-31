@@ -1444,7 +1444,7 @@ void M_OpenSelectWadMenu(void)
     selectWadNextCounter = 0;
     M_SetupNextMenu(&SelectWadDef);
     M_SelectWadReadDirectory();
-    M_snprintf(selectWadText[select_wad_0], FILENAME_LIMIT, "FREEDOOM1.WAD");
+    M_snprintf(selectWadText[select_wad_0], FILENAME_LIMIT, "FREEDOOM-DEMO.WAD");
 }
 
 void M_DrawSelectWad(void)
@@ -1464,7 +1464,7 @@ void M_SelectWad(int choice)
     if (choice == select_wad_0 && selectWadNextCounter == 0)
     {
         S_StartSound(NULL,sfx_swtchn);
-        M_StringCopy(cmdline_iwad, "freedoom1.wad", FILENAME_LIMIT);
+        M_StringCopy(cmdline_iwad, "freedoom-demo.wad", FILENAME_LIMIT);
         M_StringCopy(cmdline_pwad, "", FILENAME_LIMIT);
         M_StringCopy(cmdline_deh, "", FILENAME_LIMIT);
         writeCfg = true;

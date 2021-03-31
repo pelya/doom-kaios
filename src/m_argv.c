@@ -27,7 +27,7 @@
 #include "m_argv.h"  // haleyjd 20110212: warning fix
 
 
-char	cmdline_iwad[FILENAME_LIMIT] = "freedoom1.wad";
+char	cmdline_iwad[FILENAME_LIMIT] = "freedoom-demo.wad";
 char	cmdline_pwad[FILENAME_LIMIT] = "";
 char	cmdline_deh[FILENAME_LIMIT] = "";
 

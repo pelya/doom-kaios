@@ -1219,7 +1219,7 @@ int R_TextureNumForName(const char *name)
 	namet[8] = '\0';
 	memcpy (namet, name, 8);
 	// [crispy] make non-fatal
-	fprintf (stderr, "R_TextureNumForName: %s not found\n",
+	printf ("R_TextureNumForName: %s not found\n",
 		 namet);
 	return 0;
     }

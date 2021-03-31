@@ -27,10 +27,7 @@ set(CMAKE_C_FLAGS " \
     -s EXTRA_EXPORTED_RUNTIME_METHODS=['FS','UTF8ToString'] \
     -s FORCE_FILESYSTEM=1 \
     --no-heap-copy \
-    --preload-file ${CMAKE_CURRENT_LIST_DIR}/freedoom1.wad@freedoom1.wad \
-    --preload-file ${CMAKE_CURRENT_LIST_DIR}/freedoom1.wad.1@freedoom1.wad.1 \
-    --preload-file ${CMAKE_CURRENT_LIST_DIR}/freedoom1.wad.2@freedoom1.wad.2 \
-    --preload-file ${CMAKE_CURRENT_LIST_DIR}/freedoom1.wad.3@freedoom1.wad.3 \
+    --preload-file ${CMAKE_CURRENT_LIST_DIR}/freedoom-demo.wad@freedoom-demo.wad \
 ")
 
 add_executable(doom ${SRC_FILES})

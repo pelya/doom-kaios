@@ -1463,7 +1463,7 @@ void D_DoomMain (void)
             && memcmp(fileName + strlen(fileName) - 4, ".DEH", 4) != 0))
         {
             // An error message will be shown in the WAD import menu, use fallback WAD for the game
-            M_StringCopy(cmdline_iwad, "freedoom1.wad", FILENAME_LIMIT);
+            M_StringCopy(cmdline_iwad, "freedoom-demo.wad", FILENAME_LIMIT);
             M_StringCopy(cmdline_pwad, "", FILENAME_LIMIT);
             M_StringCopy(cmdline_deh, "", FILENAME_LIMIT);
         }
@@ -1512,7 +1512,7 @@ void D_DoomMain (void)
             else
             {
                 // Use fallback WAD when importing new WAD file, in case we import broken WAD and the game fails to load
-                M_StringCopy(cmdline_iwad, "freedoom1.wad", FILENAME_LIMIT);
+                M_StringCopy(cmdline_iwad, "freedoom-demo.wad", FILENAME_LIMIT);
                 M_StringCopy(cmdline_pwad, "", FILENAME_LIMIT);
                 M_StringCopy(cmdline_deh, "", FILENAME_LIMIT);
             }
