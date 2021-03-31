@@ -26,11 +26,14 @@
 // Keyboard controls
 //
 
-int key_right = '2';
-int key_left = '5';
-
-int key_up = '0';
-int key_down = KEYP_MULTIPLY;
+int key_right = KEY_DOWNARROW;
+int key_left = KEY_UPARROW;
+int key_up = KEY_RIGHTARROW;
+int key_down = KEY_LEFTARROW;
+int key_right_alt = '2';
+int key_left_alt = '5';
+int key_up_alt = '0';
+int key_down_alt = KEYP_MULTIPLY;
 int key_strafeleft = '1';
 int key_straferight = '4';
 int key_fire = '7';
@@ -208,9 +211,13 @@ int dclick_use = 1;
 void M_BindBaseControls(void)
 {
     M_BindIntVariable("key_right",          &key_right);
+    M_BindIntVariable("key_right_alt",      &key_right_alt);
     M_BindIntVariable("key_left",           &key_left);
+    M_BindIntVariable("key_left_alt",       &key_left_alt);
     M_BindIntVariable("key_up",             &key_up);
+    M_BindIntVariable("key_up_alt",         &key_up_alt);
     M_BindIntVariable("key_down",           &key_down);
+    M_BindIntVariable("key_down_alt",       &key_down_alt);
     M_BindIntVariable("key_strafeleft",     &key_strafeleft);
     M_BindIntVariable("key_straferight",    &key_straferight);
     M_BindIntVariable("key_fire",           &key_fire);

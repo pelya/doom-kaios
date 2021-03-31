@@ -367,7 +367,9 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
     if (joyxmove < 0
 	|| joyxmove > 0  
 	|| gamekeydown[key_right]
-	|| gamekeydown[key_left]) 
+	|| gamekeydown[key_right_alt]
+	|| gamekeydown[key_left]
+	|| gamekeydown[key_left_alt]) 
 	turnheld += ticdup; 
     else 
 	turnheld = 0; 
@@ -380,11 +382,11 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
     // let movement keys cancel each other out
     if (strafe) 
     { 
-	if (gamekeydown[key_right]) 
+	if (gamekeydown[key_right] || gamekeydown[key_right_alt]) 
 	{
 	    side += sidemove[speed]; 
 	}
-	if (gamekeydown[key_left]) 
+	if (gamekeydown[key_left] || gamekeydown[key_left_alt]) 
 	{
 	    side -= sidemove[speed]; 
 	}
@@ -392,9 +394,9 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
     } 
     else 
     { 
-	if (gamekeydown[key_right]) 
+	if (gamekeydown[key_right] || gamekeydown[key_right_alt]) 
 	    cmd->angleturn -= angleturn[tspeed]; 
-	if (gamekeydown[key_left]) 
+	if (gamekeydown[key_left] || gamekeydown[key_left_alt]) 
 	    cmd->angleturn += angleturn[tspeed]; 
 	if (joyxmove > 0) 
 	    cmd->angleturn -= joyxmove >> (6 - speed);
@@ -402,11 +404,11 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
 	    cmd->angleturn += -joyxmove >> (6 - speed);
     } 
  
-    if (gamekeydown[key_up]) 
+    if (gamekeydown[key_up] || gamekeydown[key_up_alt]) 
     {
 	forward += forwardmove[speed]; 
     }
-    if (gamekeydown[key_down]) 
+    if (gamekeydown[key_down] || gamekeydown[key_down_alt]) 
     {
 	forward -= forwardmove[speed]; 
     }
