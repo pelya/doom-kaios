@@ -160,3 +160,5 @@ https://www.w3.org/TR/tcp-udp-sockets/
 https://developer.mozilla.org/en-US/docs/Archive/B2G_OS/API/UDPSocket
 
 It requires privileged app permissions.
+Privileged app cannot contain Javascript code embedded into HTML directly,
+it must use <script src="..." everywhere, the embedded Javascript won't be executed.
