@@ -30,8 +30,8 @@ int key_right = KEY_DOWNARROW;
 int key_left = KEY_UPARROW;
 int key_up = KEY_RIGHTARROW;
 int key_down = KEY_LEFTARROW;
-int key_right_alt = '2'; // Alternative keys for movement
-int key_left_alt = '5'; // Alternative keys for movement
+int key_right_alt = '5'; // Alternative keys for movement
+int key_left_alt = '2'; // Alternative keys for movement
 int key_up_alt = '0'; // Alternative keys for movement
 int key_down_alt = KEYP_MULTIPLY; // Alternative keys for movement
 int key_up_ext = '9'; // Move forward while shooting with one keypress
@@ -42,6 +42,7 @@ int key_fire = '7';
 int key_fire_alt = '8'; // Alternative Fire key
 int key_fire_ext = '9'; // Extra Fire key
 int key_use = KEYP_DIVIDE;
+int key_use_alt = KEY_ENTER;
 int key_strafe = KEY_RALT;
 int key_speed = KEY_RSHIFT; 
 
@@ -228,6 +229,7 @@ void M_BindBaseControls(void)
     M_BindIntVariable("key_fire_alt",       &key_fire_alt);
     M_BindIntVariable("key_fire_ext",       &key_fire_ext);
     M_BindIntVariable("key_use",            &key_use);
+    M_BindIntVariable("key_use_alt",        &key_use_alt);
     M_BindIntVariable("key_strafe",         &key_strafe);
     M_BindIntVariable("key_speed",          &key_speed);
 

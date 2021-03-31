@@ -446,6 +446,7 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
 	cmd->buttons |= BT_ATTACK; 
  
     if (gamekeydown[key_use]
+     || gamekeydown[key_use_alt]
      || joybuttons[joybuse]
      || mousebuttons[mousebuse])
     { 

@@ -33,6 +33,7 @@ extern int key_fire;
 extern int key_fire_alt;
 extern int key_fire_ext;
 extern int key_use;
+extern int key_use_alt;
 extern int key_strafe;
 extern int key_speed;
 

@@ -415,6 +415,7 @@ static default_t	doom_defaults_list[] =
     //
 
     CONFIG_VARIABLE_KEY(key_use),
+    CONFIG_VARIABLE_KEY(key_use_alt),
 
     //!
     // Keyboard key to turn on strafing.  When held down, pressing the
