@@ -142,3 +142,21 @@ To show a fullscreen advertisement, add following code to some part of your app,
 it should be accessible from somewhere in the app, like settings dialog:
 
     EM_ASM( if (lastKaiAd !== false) lastKaiAd.call('display'); );
+
+Netplay will likely never be added.
+Mormally UDP sockets are only available as WebRTC API in the web browser,
+which wraps UDP data into DTLS/SRTP/SCTP protocols,
+so the connection between two phones on the same WiFi is easy, but hosting dedicated servers
+will require some kind of WebRTC proxy on top of UDP, so existing server cannot be used.
+
+On top of this, Chocolate Doom does not have any online server browser in the game itself,
+you launch SETUP.EXE, select the server from the list, and then it launches DOOM.EXE.
+So for KaiOS, two apps will need to be distributed in the same package.
+
+There is supposed to be a hidden API to use UDP sockets directly on KaiOS, without WebRTC wrappers:
+
+https://www.w3.org/TR/tcp-udp-sockets/
+
+https://developer.mozilla.org/en-US/docs/Archive/B2G_OS/API/UDPSocket
+
+It requires privileged app permissions.
