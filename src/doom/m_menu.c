@@ -2509,6 +2509,12 @@ boolean M_Responder (event_t* ev)
 	    itemOn = currentMenu->lastOn;
 	    S_StartSound(NULL,sfx_swtchn);
 	}
+	else
+	{
+	    currentMenu->lastOn = itemOn;
+	    M_ClearMenus ();
+	    S_StartSound(NULL,sfx_swtchx);
+	}
 	return true;
     }
 
