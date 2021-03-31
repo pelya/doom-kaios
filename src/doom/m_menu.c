@@ -1071,7 +1071,8 @@ void M_Episode(int choice)
 //      M_MoreEpisodes
 //
 
-boolean downloadFreedoom2Started = false;
+boolean downloadFreedoomStarted = false;
+boolean freedoom1Downloaded = false;
 
 void M_OpenMoreEpisodesMenu(int choice)
 {
@@ -1115,9 +1116,13 @@ void M_DrawMoreEpisodes(void)
     M_WriteTextScale2x(48, 30 + LINEHEIGHT * 2, "OPEN GAME DATA / MAP PACK WAD / DEH");
 
     M_WriteTextScale2x(48, 30 + LINEHEIGHT * 3,
-                downloadFreedoom2Started ?
-                "OPEN FREEDOOM2.WAD IN DOWNLOADS APP" :
-                "DOWNLOAD FREEDOOM2.WAD (30 Mb)");
+                freedoom1Downloaded
+                ? (downloadFreedoomStarted
+                ? "OPEN FREEDOOM2.WAD IN DOWNLOADS APP"
+                : "DOWNLOAD FREEDOOM PART 2 (30 Mb)")
+                : (downloadFreedoomStarted
+                ? "OPEN FREEDOOM1.WAD IN DOWNLOADS APP"
+                : "DOWNLOAD FREEDOOM FULL GAME (30 Mb)"));
 
     M_WriteTextScale2x(48, 30 + LINEHEIGHT * 4, "OPEN FILE MANAGER APP");
 
@@ -1137,10 +1142,11 @@ void M_MoreEpisodes(int choice)
     S_StartSound(NULL,sfx_swtchn);
     if (choice == more_ep_download_freedoom2)
     {
-        if (!downloadFreedoom2Started)
+        if (!downloadFreedoomStarted)
         {
-            downloadFreedoom2Started = true;
-            EM_ASM( window.location.assign('https://github.com/pelya/doom-kaios/releases/download/freedoom-0.12.1/freedoom2.wad'); );
+            downloadFreedoomStarted = true;
+            EM_ASM({ window.location.assign('https://github.com/pelya/doom-kaios/releases/download/freedoom-0.12.1/freedoom' + String($0) + '.wad'); },
+                   (freedoom1Downloaded ? 2 : 1));
         }
         else
         {
@@ -2745,6 +2751,11 @@ void M_Init (void)
     }
 
     opldev = M_CheckParm("-opldev") > 0;
+
+    if (access(FS_WRITE_MOUNT_POINT "/FREEDOOM1.WAD", R_OK) == 0)
+    {
+        freedoom1Downloaded = true;
+    }
 
     if ((EM_ASM_INT( return sys_is_wad_file_available(); )))
     {

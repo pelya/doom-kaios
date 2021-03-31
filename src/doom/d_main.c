@@ -693,7 +693,7 @@ void D_DoAdvanceDemo (void)
 	pagename = DEH_String("CREDIT");
 	break;
       case 3:
-	G_DeferedPlayDemo(DEH_String("demo2"));
+	G_DeferedPlayDemo(W_CheckNumForName("demo2") != -1 ? DEH_String("demo2") : DEH_String("demo1"));
 	break;
       case 4:
 	gamestate = GS_DEMOSCREEN;
@@ -714,11 +714,11 @@ void D_DoAdvanceDemo (void)
 	}
 	break;
       case 5:
-	G_DeferedPlayDemo(DEH_String("demo3"));
+	G_DeferedPlayDemo(W_CheckNumForName("demo3") != -1 ? DEH_String("demo3") : DEH_String("demo1"));
 	break;
         // THE DEFINITIVE DOOM Special Edition demo
       case 6:
-	G_DeferedPlayDemo(DEH_String("demo4"));
+	G_DeferedPlayDemo(W_CheckNumForName("demo4") != -1 ? DEH_String("demo4") : DEH_String("demo1"));
 	break;
     }
 
@@ -727,11 +727,6 @@ void D_DoAdvanceDemo (void)
     if (gamevariant == bfgedition && !strcasecmp(pagename, "TITLEPIC")
         && W_CheckNumForName("titlepic") < 0)
     {
-        pagename = DEH_String("INTERPIC");
-    }
-    if ((EM_ASM_INT( return sys_is_wad_file_available(); )))
-    {
-        // Red text on red background does not look good, use dark background
         pagename = DEH_String("INTERPIC");
     }
 }
