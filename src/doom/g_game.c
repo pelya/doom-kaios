@@ -404,11 +404,11 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
 	    cmd->angleturn += -joyxmove >> (6 - speed);
     } 
  
-    if (gamekeydown[key_up] || gamekeydown[key_up_alt] || gamekeydown[key_up_dup])
+    if (gamekeydown[key_up] || gamekeydown[key_up_alt] || gamekeydown[key_up_ext])
     {
 	forward += forwardmove[speed]; 
     }
-    if (gamekeydown[key_down] || gamekeydown[key_down_alt] || gamekeydown[key_down_dup])
+    if (gamekeydown[key_down] || gamekeydown[key_down_alt] || gamekeydown[key_down_ext])
     {
 	forward -= forwardmove[speed]; 
     }
@@ -442,7 +442,7 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
  
     if (gamekeydown[key_fire] || mousebuttons[mousebfire]
 	|| joybuttons[joybfire] 
-	|| gamekeydown[key_fire_alt] || gamekeydown[key_fire_dup])
+	|| gamekeydown[key_fire_alt] || gamekeydown[key_fire_ext])
 	cmd->buttons |= BT_ATTACK; 
  
     if (gamekeydown[key_use]

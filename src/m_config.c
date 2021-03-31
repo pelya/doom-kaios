@@ -186,7 +186,7 @@ static default_t	doom_defaults_list[] =
 
     CONFIG_VARIABLE_KEY(key_up),
     CONFIG_VARIABLE_KEY(key_up_alt),
-    CONFIG_VARIABLE_KEY(key_up_dup),
+    CONFIG_VARIABLE_KEY(key_up_ext),
 
     //!
     // Keyboard key to move backward.
@@ -194,7 +194,7 @@ static default_t	doom_defaults_list[] =
 
     CONFIG_VARIABLE_KEY(key_down),
     CONFIG_VARIABLE_KEY(key_down_alt),
-    CONFIG_VARIABLE_KEY(key_down_dup),
+    CONFIG_VARIABLE_KEY(key_down_ext),
 
     //!
     // Keyboard key to strafe left.
@@ -408,7 +408,7 @@ static default_t	doom_defaults_list[] =
     // Duplicate Fire key
     //
 
-    CONFIG_VARIABLE_KEY(key_fire_dup),
+    CONFIG_VARIABLE_KEY(key_fire_ext),
 
     //!
     // Keyboard key to "use" an object, eg. a door or switch.
