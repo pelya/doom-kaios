@@ -960,6 +960,7 @@ void M_SfxVol(int choice)
     }
 	
     S_SetSfxVolume(sfxVolume * 8);
+    M_SaveDefaults();
 }
 
 void M_MusicVol(int choice)
@@ -977,6 +978,7 @@ void M_MusicVol(int choice)
     }
 	
     S_SetMusicVolume(musicVolume * 8);
+    M_SaveDefaults();
 }
 
 
@@ -1363,11 +1365,19 @@ void M_LoadingWad(int choice)
             menuactive = false; // Hide the menu to avoid double clicks, the game will stay active for half-second
             // Reload using new config
             EM_ASM({
+                var sys_shutdown_anim = 100;
                 setInterval(function() {
                     if (sys_fs_sync_is_done) {
                         location.reload();
                     }
-                }, 100);
+                    if (sys_shutdown_anim > 0) {
+                        sys_shutdown_anim -= 20;
+                    }
+                    else {
+                    }
+                    document.getElementById('canvas').style.height = String(sys_shutdown_anim) + '%';
+                    document.getElementById('canvas').style.marginTop = String((100 - sys_shutdown_anim) / 2) + '%';
+                }, 20);
             });
         }
         else
@@ -1516,11 +1526,19 @@ void M_SelectWad(int choice)
         menuactive = false; // Hide the menu to avoid double clicks, the game will stay active for half-second
         // Reload using new config
         EM_ASM({
+            var sys_shutdown_anim = 100;
             setInterval(function() {
                 if (sys_fs_sync_is_done) {
                     location.reload();
                 }
-            }, 100);
+                if (sys_shutdown_anim > 0) {
+                    sys_shutdown_anim -= 20;
+                }
+                else {
+                }
+                document.getElementById('canvas').style.height = String(sys_shutdown_anim) + '%';
+                document.getElementById('canvas').style.marginTop = String((100 - sys_shutdown_anim) / 2) + '%';
+            }, 20);
         });
     }
 }
@@ -1573,6 +1591,7 @@ void M_ChangeMessages(int choice)
 	players[consoleplayer].message = DEH_String(MSGON);
 
     message_dontfuckwithme = true;
+    M_SaveDefaults();
 }
 
 
@@ -1712,15 +1731,21 @@ void M_QuitDOOM(int choice)
 
     M_StartMessage(endstring,M_QuitResponse,true);
 
-    M_SaveDefaults();
-
     // Force current window to close, this is the only way to clear app state
     EM_ASM({
+        var sys_shutdown_anim = 100;
         setInterval(function() {
             if (sys_fs_sync_is_done) {
                 window.open('', '_self').close();
             }
-        }, 100);
+            if (sys_shutdown_anim > 0) {
+                sys_shutdown_anim -= 20;
+            }
+            else {
+            }
+            document.getElementById('canvas').style.height = String(sys_shutdown_anim) + '%';
+            document.getElementById('canvas').style.marginTop = String((100 - sys_shutdown_anim) / 2) + '%';
+        }, 20);
     });
 
     menuactive = false; // Hide the menu to avoid double clicks, the game will stay active for half-second
@@ -1742,6 +1767,7 @@ void M_ChangeSensitivity(int choice)
 	    mouseSensitivity++;
 	break;
     }
+    M_SaveDefaults();
 }
 
 
@@ -1758,6 +1784,7 @@ void M_ChangeDetail(int choice)
 	players[consoleplayer].message = DEH_String(DETAILHI);
     else
 	players[consoleplayer].message = DEH_String(DETAILLO);
+    M_SaveDefaults();
 }
 
 
@@ -1790,6 +1817,7 @@ void M_SizeDisplay(int choice)
 	
 
     R_SetViewSize (screenblocks, detailLevel);
+    M_SaveDefaults();
 }
 
 
