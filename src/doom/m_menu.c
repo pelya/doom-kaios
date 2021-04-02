@@ -1308,13 +1308,13 @@ void M_DrawLoadingWad(void)
     }
     else
     {
-        for (i = 0; i < 30; i++)
+        for (i = 0; i < 50; i++)
         {
-            text[i + 1] = (i >= ((long long)loadingWadFileWritten * 30 / (loadingWadFileSize > 0 ? loadingWadFileSize : 123))) ? ' ' : '!';
+            text[i + 1] = (i >= ((long long)loadingWadFileWritten * 50 / (loadingWadFileSize > 0 ? loadingWadFileSize : 123))) ? '.' : '!';
         }
         text[0] = '[';
-        text[31] = ']';
-        text[32] = 0;
+        text[51] = ']';
+        text[52] = 0;
         M_WriteTextScale2x(48, 30 + LINEHEIGHT * 3, text);
         M_snprintf(text, sizeof(text), "%d%% DONE: %d of %d Mb",
                    (int)((long long)loadingWadFileWritten * 100 / (loadingWadFileSize > 0 ? loadingWadFileSize : 123)),
