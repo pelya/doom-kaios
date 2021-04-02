@@ -1,12 +1,12 @@
 {
-  "name": "freedoom",
-  "short_name": "Freedoom",
+  "name": "freedoom portrait",
+  "short_name": "Freedoom portrait",
   "version": "1.3",
   "description": "Freedoom is not affiliated with DOOM by id Software, and does not contain any content from that game. Source code: https://github.com/pelya/doom-kaios",
   "subtitle": "First-person shooter",
   "locales": {
     "en-US": {
-      "name": "Freedoom",
+      "name": "Freedoom portrait",
       "description": "Freedoom is not affiliated with DOOM by id Software, and does not contain any content from that game. Source code: https://github.com/pelya/doom-kaios",
       "subtitle": "First-person shooter"
     }
@@ -22,7 +22,7 @@
     "name": "pelya",
     "url": "https://github.com/pelya/doom-kaios"
   },
-  "origin": "app://freedoom",
+  "origin": "app://freedoom.portrait",
   "type": "web",
   "permissions": {
     "mobiledata":{},
@@ -31,7 +31,7 @@
   "fullscreen": "true",
   "categories": [ "games" ],
   "default_locale": "en-US",
-  "orientation": [ "landscape-primary" ],
+  "orientation": [ "portrait-primary" ],
   "precompile": [ "doom.js" ],
   "activities": {
     "open": {

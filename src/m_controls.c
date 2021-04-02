@@ -26,25 +26,25 @@
 // Keyboard controls
 //
 
-int key_right = KEY_DOWNARROW;
-int key_left = KEY_UPARROW;
-int key_up = KEY_RIGHTARROW;
-int key_down = KEY_LEFTARROW;
-int key_right_alt = '5'; // Alternative keys for movement
-int key_left_alt = '2'; // Alternative keys for movement
-int key_up_alt = '0'; // Alternative keys for movement
-int key_down_alt = KEYP_MULTIPLY; // Alternative keys for movement
-int key_up_ext = '9'; // Move forward while shooting with one keypress
-int key_down_ext = '7'; // Move back while shooting with one keypress
-int key_strafeleft = '1';
-int key_straferight = '4';
-int key_fire = '7';
-int key_fire_alt = '8'; // Alternative Fire key
-int key_fire_ext = '9'; // Extra Fire key
-int key_use = KEYP_DIVIDE;
+int key_right = KEY_RIGHTARROW;
+int key_left = KEY_LEFTARROW;
+int key_up = KEY_UPARROW;
+int key_down = KEY_DOWNARROW;
+int key_right_alt = '6'; // Alternative keys for movement
+int key_left_alt = '4'; // Alternative keys for movement
+int key_up_alt = '5'; // Alternative keys for movement
+int key_down_alt = '8'; // Alternative keys for movement
+int key_up_ext = 'u'; // Move forward while shooting with one keypress
+int key_down_ext = '0'; // Move back while shooting with one keypress
+int key_strafeleft = '7';
+int key_straferight = '9';
+int key_fire = '2';
+int key_fire_alt = '0'; // Alternative Fire key
+int key_fire_ext = 'f'; // Extra Fire key
+int key_use = 'y';
 int key_use_alt = KEY_ENTER;
 int key_strafe = KEY_RALT;
-int key_speed = KEY_RSHIFT; 
+int key_speed = KEY_RSHIFT;
 
 // 
 // Heretic keyboard controls
@@ -136,15 +136,15 @@ int key_weapon5 = 'g';
 int key_weapon6 = 'h';
 int key_weapon7 = 'j';
 int key_weapon8 = 'k';
-int key_prevweapon = '3';
-int key_nextweapon = '6';
+int key_prevweapon = '1';
+int key_nextweapon = '3';
 
 // Map control keys:
 
-int key_map_north     = KEY_RIGHTARROW;
-int key_map_south     = KEY_LEFTARROW;
-int key_map_east      = KEY_DOWNARROW;
-int key_map_west      = KEY_UPARROW;
+int key_map_north     = KEY_UPARROW;
+int key_map_south     = KEY_DOWNARROW;
+int key_map_east      = KEY_RIGHTARROW;
+int key_map_west      = KEY_LEFTARROW;
 int key_map_zoomin    = '3';
 int key_map_zoomout   = '6';
 int key_map_toggle    = KEYP_ENTER;
@@ -157,10 +157,10 @@ int key_map_clearmark = '9';
 // menu keys:
 
 int key_menu_activate  = KEY_ESCAPE;
-int key_menu_up        = KEY_RIGHTARROW;
-int key_menu_down      = KEY_LEFTARROW;
-int key_menu_left      = KEY_UPARROW;
-int key_menu_right     = KEY_DOWNARROW;
+int key_menu_up        = KEY_UPARROW;
+int key_menu_down      = KEY_DOWNARROW;
+int key_menu_left      = KEY_LEFTARROW;
+int key_menu_right     = KEY_RIGHTARROW;
 int key_menu_back      = KEY_BACKSPACE;
 int key_menu_forward   = KEY_ENTER;
 int key_menu_confirm   = 'y';
@@ -176,9 +176,9 @@ int key_menu_endgame   = KEY_F7;
 int key_menu_messages  = KEY_F8;
 int key_menu_qload     = KEY_F9;
 int key_menu_quit      = KEY_F10;
-int key_menu_gamma     = KEY_F11;
+int key_menu_gamma     = KEYP_MULTIPLY;
 
-int key_menu_incscreen = KEY_EQUALS;
+int key_menu_incscreen = KEYP_DIVIDE;
 int key_menu_decscreen = KEY_MINUS;
 int key_menu_screenshot = 0;
 

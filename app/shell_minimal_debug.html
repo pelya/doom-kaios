@@ -9,8 +9,8 @@
       html, body { width: 100%; height: 100%; overflow: hidden; background-color: black; }
       .emscripten { display: block; }
       /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
-      canvas.emscripten { border: 0px none; background-color: black; display: block; width:100%; height:100%; left: 0; top: 0; object-fit: fill; z-index: 1; }
-      textarea.emscripten { font-size: 10px; font-family: monospace; line-height: 1; color: yellow; background-color: black; width: 100%; height: 35%; bottom: 0; left: 0; z-index: 10; }
+      canvas.emscripten { border: 0px none; background-color: black; display: block; width:100%; height:240px; left: 0; top: 0; object-fit: fill; z-index: 1; }
+      textarea.emscripten { font-size: 10px; font-family: monospace; line-height: 1; color: yellow; background-color: black; width: 100%; height: 80px; bottom: 0; left: 0; z-index: 10; }
       img.splash { width: 100%; height: 85%; top: 0; object-fit: fill; z-index: 3; }
       div.splash { width: 100%; height: 15%; bottom: 0; text-align: center; align-items: center; justify-content: center; background-color: #FFFFFF; z-index: 4; }
     </style>
@@ -48,7 +48,7 @@
       });
 
       if (sys_debug) {
-        document.getElementById('canvas').style.height = "65%";
+        //document.getElementById('canvas').style.height = "65%";
       } else {
         document.getElementById('output').hidden = true;
         document.getElementById('output').style.display = "none";
