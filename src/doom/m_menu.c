@@ -1992,18 +1992,23 @@ M_WriteTextScale2x
 	    cy += LINEHEIGHT;
 	    continue;
 	}
-		
+
+	int offset = 0;
+	if (c == '.' || c == ',')
+	{
+		offset = 6;
+	}
+
 	c = toupper(c) - HU_FONTSTART;
 	if (c < 0 || c>= HU_FONTSIZE)
 	{
 	    cx += 4;
 	    continue;
 	}
-		
 	w = SHORT (hu_font[c]->width);
 	if (cx+w > SCREENWIDTH)
 	    break;
-	V_DrawPatchScaleVert2x(cx, cy, hu_font[c]);
+	V_DrawPatchScaleVert2x(cx, cy + offset, hu_font[c]);
 	cx+=w;
     }
 }
