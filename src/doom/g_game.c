@@ -358,6 +358,7 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
     speed = key_speed >= NUMKEYS
          || joybspeed >= MAX_JOY_BUTTONS
          || gamekeydown[key_speed] 
+         || gamekeydown[key_speed_alt]
          || joybuttons[joybspeed];
  
     forward = side = 0;

@@ -430,6 +430,7 @@ static default_t	doom_defaults_list[] =
     //
 
     CONFIG_VARIABLE_KEY(key_speed),
+    CONFIG_VARIABLE_KEY(key_speed_alt),
 
     //!
     // If non-zero, mouse input is enabled.  If zero, mouse input is

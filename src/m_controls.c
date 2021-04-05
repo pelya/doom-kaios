@@ -44,7 +44,8 @@ int key_fire_ext = '9'; // Extra Fire key
 int key_use = KEYP_DIVIDE;
 int key_use_alt = KEY_ENTER;
 int key_strafe = KEY_RALT;
-int key_speed = KEY_RSHIFT; 
+int key_speed = KEYP_DIVIDE;
+int key_speed_alt = KEY_ENTER;
 
 // 
 // Heretic keyboard controls
@@ -232,6 +233,7 @@ void M_BindBaseControls(void)
     M_BindIntVariable("key_use_alt",        &key_use_alt);
     M_BindIntVariable("key_strafe",         &key_strafe);
     M_BindIntVariable("key_speed",          &key_speed);
+    M_BindIntVariable("key_speed_alt",      &key_speed_alt);
 
     M_BindIntVariable("mouseb_fire",        &mousebfire);
     M_BindIntVariable("mouseb_strafe",      &mousebstrafe);
