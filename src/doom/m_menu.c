@@ -1996,7 +1996,7 @@ M_WriteTextScale2x
 	int offset = 0;
 	if (c == '.' || c == ',')
 	{
-		offset = 6;
+		offset = 4;
 	}
 
 	c = toupper(c) - HU_FONTSTART;
