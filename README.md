@@ -141,7 +141,7 @@ If apps aren't monetized, KaiStore team would mark it a low priority and the QA 
 To show a fullscreen advertisement, add following code to some part of your app,
 it should be accessible from somewhere in the app, like settings dialog:
 
-    EM_ASM( if (lastKaiAd !== false) lastKaiAd.call('display'); );
+    EM_ASM( if (sys_preloaded_advertisement !== false) sys_preloaded_advertisement.call('display'); );
 
 Netplay will likely never be added.
 Mormally UDP sockets are only available as WebRTC API in the web browser,
@@ -161,4 +161,4 @@ https://developer.mozilla.org/en-US/docs/Archive/B2G_OS/API/UDPSocket
 
 It requires privileged app permissions.
 Privileged app cannot contain Javascript code embedded into HTML directly,
-it must use <script src="..." everywhere, the embedded Javascript won't be executed.
+you must use <script src="..."> everywhere, the embedded Javascript won't be executed.

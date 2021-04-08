@@ -1656,7 +1656,7 @@ void M_FinishReadThis(int choice)
     M_SetupNextMenu(&MainDef);
 #ifdef EMSCRIPTEN
     // Advertisement is required for KaiStore submission, but I can hide it in the help dialog
-    EM_ASM( if (lastKaiAd !== false) lastKaiAd.call('display'); );
+    EM_ASM( if (sys_preloaded_advertisement !== false) sys_preloaded_advertisement.call('display'); );
 #endif
 }
 

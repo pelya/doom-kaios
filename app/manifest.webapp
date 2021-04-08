@@ -12,7 +12,7 @@
     }
   },
   "default_locale": "en-US",
-  "launch_path": "/doom.html",
+  "launch_path": "/index.html",
   "icons": {
     "56": "/icon_56.png",
     "112": "/icon_112.png"
@@ -32,10 +32,10 @@
   "categories": [ "games" ],
   "default_locale": "en-US",
   "orientation": [ "landscape-primary" ],
-  "precompile": [ "doom.js" ],
+  "precompile": [ "kaiads.v4.min.js", "sys.js", "app.js" ],
   "activities": {
     "open": {
-      "href": "/doom.html",
+      "href": "/index.html",
       "filters": {
         "blob": {
           "required": true
@@ -50,7 +50,7 @@
       "returnValue": false
     },
     "share": {
-      "href": "/doom.html",
+      "href": "/index.html",
       "blobs": {
         "required": true
       },

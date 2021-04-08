@@ -30,16 +30,16 @@ set(CMAKE_C_FLAGS " \
     --preload-file ${CMAKE_CURRENT_LIST_DIR}/freedoom-demo.wad@freedoom-demo.wad \
 ")
 
-add_executable(doom ${SRC_FILES})
-set_target_properties(doom PROPERTIES SUFFIX .html)
-target_link_libraries(doom idbfs.js)
+add_executable(app ${SRC_FILES})
+set_target_properties(app PROPERTIES SUFFIX .js)
+target_link_libraries(app idbfs.js)
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     set(CMAKE_C_FLAGS_DEBUG "-s ASSERTIONS=2 -O2") # -O0 -g -fsanitize=undefined -s SAFE_HEAP=1 -s WASM=1
-    target_link_libraries(doom -O2 --shell-file=${CMAKE_CURRENT_LIST_DIR}/app/shell_minimal_debug.html)
+    target_link_libraries(app -O2)
 else()
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s ASSERTIONS=0 -flto -Oz")
-    target_link_libraries(doom -flto -Oz --shell-file=${CMAKE_CURRENT_LIST_DIR}/app/shell_minimal.html)
+    target_link_libraries(app -flto -Oz)
 endif()
 
-em_link_js_library(doom ${libraryJsFiles})
+em_link_js_library(app ${libraryJsFiles})
