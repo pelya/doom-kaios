@@ -89,12 +89,12 @@ Use following code to close the app:
 
     EM_ASM( window.open('', '_self').close(); );
 
-After calling SDL_CreateWindow(), call following code to hide splash image.
 If you don't call it, splash image is hidden automatically in 10 seconds.
+if you simply call exit(0) the app won't clear it's state and will show black screen on the next launch
+
+After calling SDL_CreateWindow(), call following code to hide splash image.
 
     EM_ASM( sys_hide_splash_image(); );
-
-if you simply call exit(0) the app won't clear it's state and will show black screen on the next launch
 
 To write data to files that will not be deleted after you close the app, you have to mount a writable file system,
 and sync it after writing to file.
