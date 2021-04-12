@@ -67,11 +67,11 @@ You should see your app in the device app list, install script freezes at the en
 
 KaiOS devices generate following SDL2 keycodes:
 
-SDL_SCANCODE_BACKSPACE for 'Back' key, not present on all phones
+SDL_SCANCODE_BACKSPACE for 'Back' key
 
 SDL_SCANCODE_KP_ENTER for 'Call' key
 
-SDL_SCANCODE_ESCAPE for 'End Call' key
+SDL_SCANCODE_ESCAPE for 'End Call' key, not present on all phones
 
 SDL_SCANCODE_0 .. SDL_SCANCODE_9, SDL_SCANCODE_KP_HASH, SDL_SCANCODE_KP_MULTIPLY for numeric keyboard
 
