@@ -1,7 +1,7 @@
 {
   "name": "freedoom",
   "short_name": "Freedoom",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Freedoom is not affiliated with DOOM by id Software, and does not contain any content from that game. Additional episodes can be downloaded from options menu (only for phones with 512 Mb RAM). Source code: https://github.com/pelya/doom-kaios",
   "subtitle": "First-person shooter",
   "locales": {
