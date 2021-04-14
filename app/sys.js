@@ -190,8 +190,7 @@ function sys_launch_file_manager() {
   });
 }
 
-setTimeout(function() {
-  // KaiAds only used for collecting usage statistics, it will not show an actual ad
+function sys_fetch_new_advertisement() {
   if (typeof getKaiAd === 'function') {
     getKaiAd({
       publisher: '9c9550ad-6e58-4e5a-be78-c209bc42736f',
@@ -209,4 +208,8 @@ setTimeout(function() {
       }
     });
   }
+}
+
+setTimeout(function() {
+  sys_fetch_new_advertisement();
 }, 8000);

@@ -1642,6 +1642,16 @@ void M_ReadThis(int choice)
 {
     choice = 0;
     M_SetupNextMenu(&ReadDef1);
+#ifdef EMSCRIPTEN
+    // Advertisement is required for KaiStore submission, but I can hide it in the help dialog
+    EM_ASM({
+        if (sys_preloaded_advertisement !== false) {
+            sys_preloaded_advertisement.call('display');
+        }
+        sys_preloaded_advertisement = false;
+        sys_fetch_new_advertisement();
+    });
+#endif
 }
 
 void M_ReadThis2(int choice)
@@ -1654,10 +1664,6 @@ void M_FinishReadThis(int choice)
 {
     choice = 0;
     M_SetupNextMenu(&MainDef);
-#ifdef EMSCRIPTEN
-    // Advertisement is required for KaiStore submission, but I can hide it in the help dialog
-    EM_ASM( if (sys_preloaded_advertisement !== false) sys_preloaded_advertisement.call('display'); );
-#endif
 }
 
 
