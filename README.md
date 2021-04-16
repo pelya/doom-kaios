@@ -25,7 +25,7 @@ Gailly and Mark Adler.
 
 Emscripten is © 2010-2018 Emscripten authors, see [AUTHORS](https://raw.githubusercontent.com/emscripten-core/emscripten/incoming/AUTHORS) file.
 
-=== KaiOS notes ================================================================
+== KaiOS notes =================================================================
 
 Music is disabled, because it's very CPU intensive and slows down the game to a halt.
 
@@ -59,17 +59,17 @@ Launch build-debug.sh again, SDL2 should be recompiled automatically
 
 To install application.zip to your device, launch command:
 
-git submodule update --init --recursive
+    git submodule update --init --recursive
 
 Download and install ADB to path ~/bin/android-sdk/platform-tools/adb
 
 If you already have Android SDK installed, you can symlink it to your ~/bin directory:
 
-ln -s /path/to/android-sdk ~/bin/android-sdk
+    ln -s /path/to/android-sdk ~/bin/android-sdk
 
 On Debian, you can install adb from system packages:
 
-sudo apt-get install adb
+    sudo apt-get install adb
 
 Enable debug mode in your device by entering secret code on your home screen:
 
@@ -146,7 +146,7 @@ then you can use printf() in the code to write debug messages to the text area o
 KaiStore manually tests each app submission, and checks that it does not crash on phones with 256 Mb RAM.
 You can monitor your app memory usage by using 'top' command and watching RSS memory usage:
 
-adb shell top -m 5 -s rss
+    adb shell top -m 5 -s rss
 
 QA testing may take from 2 days up to 3 weeks, if there are many other apps to test.
 
