@@ -25,7 +25,21 @@ Gailly and Mark Adler.
 
 Emscripten is © 2010-2018 Emscripten authors, see [AUTHORS](https://raw.githubusercontent.com/emscripten-core/emscripten/incoming/AUTHORS) file.
 
-=== KaiOS instructions ===
+=== KaiOS notes ================================================================
+
+Music is disabled, because it's very CPU intensive and slows down the game to a halt.
+
+Netplay will likely never be added.
+Mormally UDP sockets are only available as WebRTC API in the web browser,
+which wraps UDP data into DTLS/SRTP/SCTP protocols,
+so the connection between two phones on the same WiFi is easy, but hosting dedicated servers
+will require some kind of WebRTC proxy on top of UDP, so existing server cannot be used.
+
+On top of this, Chocolate Doom does not have any online server browser in the game itself,
+you launch SETUP.EXE, select the server from the list, and then it launches DOOM.EXE.
+So for KaiOS, two apps will need to be distributed in the same package.
+
+== KaiOS instructions ==========================================================
 
 Download and build Emscripten, as described on their page: https://emscripten.org/
 
@@ -81,20 +95,29 @@ SDL_SCANCODE_AC_FORWARD and SDL_SCANCODE_AC_BACK for LSK and RSK (left soft key 
 
 SDL_SCANCODE_VOLUMEUP and SDL_SCANCODE_VOLUMEDOWN for volume keys
 
-With Emscripten, your main loop should not block anywhere - do not call sleep() or SDL_Delay() or SDL_WaitEvent()
+By default all keypresses are passed to the OS, so for example holding D-Pad Center key for 2 seconds
+will launch Google Assistant while your app is active, and End Call key will close your app immediately.
+To prevent this, disable SDL_TEXTINPUT event after initializing video:
 
-Use emscripten_set_main_loop() to call your main loop function after you initialized video and everything else
+    SDL_EventState(SDL_TEXTINPUT, SDL_DISABLE);
 
-Use following code to close the app:
+If you are using landscape mode, the screen is rotated, but the D-Pad is not rotated,
+and keycodes SDL_SCANCODE_LEFT/RIGHT/UP/DOWN are sent for the wrong direction keys.
+To fix this, add '-D KAIOS_SWAP_NAVIGATION_KEYS=1' to your compiler flags, and include sys_kaios.h everywhere,
+it will redefine SDL keycodes for navigation keys for the D-Pad rotated to the side.
 
-    EM_ASM( window.open('', '_self').close(); );
+With Emscripten, your main loop should not block anywhere - do not call sleep() or SDL_Delay() or SDL_WaitEvent().
+Use emscripten_set_main_loop() to call your main loop function after you initialized video and everything else.
 
-If you don't call it, splash image is hidden automatically in 10 seconds.
-if you simply call exit(0) the app won't clear it's state and will show black screen on the next launch
+Alternatively, you can add parameter '-s ASYNCIFY=1' to your compiler flags, this will make your code
+unwind and rewind the stack whenever it enters sleep or screen update function, and process web browser main loop,
+this makes your app run significantly slower, but you don't need to rewrite your code at all.
 
-After calling SDL_CreateWindow(), call following code to hide splash image.
+Use sys_exit_app() to close the app.
+if you simply call exit(0) the app won't clear it's state and will show black screen on the next launch.
 
-    EM_ASM( sys_hide_splash_image(); );
+After calling SDL_CreateWindow(), call sys_hide_splash_image() to hide splash image.
+If you don't call it, the splash image is hidden automatically in 10 seconds.
 
 To write data to files that will not be deleted after you close the app, you have to mount a writable file system,
 and sync it after writing to file.
@@ -138,20 +161,12 @@ and developers need to go to KaiAds page to access the app install and usage sta
 
 If apps aren't monetized, KaiStore team would mark it a low priority and the QA might be delayed.
 
-To show a fullscreen advertisement, add following code to some part of your app,
-it should be accessible from somewhere in the app, like settings dialog:
+To show a fullscreen advertisement, call sys_show_fullscreen_advertisement(),
+it should be accessible from somewhere in the app, like settings dialog.
 
-    EM_ASM( if (sys_preloaded_advertisement !== false) sys_preloaded_advertisement.call('display'); );
+You will also need to modify publisher ID and app name in app/sys.js in getKaiAd().
 
-Netplay will likely never be added.
-Mormally UDP sockets are only available as WebRTC API in the web browser,
-which wraps UDP data into DTLS/SRTP/SCTP protocols,
-so the connection between two phones on the same WiFi is easy, but hosting dedicated servers
-will require some kind of WebRTC proxy on top of UDP, so existing server cannot be used.
-
-On top of this, Chocolate Doom does not have any online server browser in the game itself,
-you launch SETUP.EXE, select the server from the list, and then it launches DOOM.EXE.
-So for KaiOS, two apps will need to be distributed in the same package.
+Netplay will likely never be added. WebRTC is hard.
 
 There is supposed to be a hidden API to use UDP sockets directly on KaiOS, without WebRTC wrappers:
 
@@ -159,6 +174,12 @@ https://www.w3.org/TR/tcp-udp-sockets/
 
 https://developer.mozilla.org/en-US/docs/Archive/B2G_OS/API/UDPSocket
 
-It requires privileged app permissions.
+It requires privileged app permissions - add following code to your manifest.webapp:
+
+    "type", "privileged",
+    "dependencies": {
+        "ads-sdk": "1.4.1"
+    }
+
 Privileged app cannot contain Javascript code embedded into HTML directly,
 you must use <script src="..."> everywhere, the embedded Javascript won't be executed.
