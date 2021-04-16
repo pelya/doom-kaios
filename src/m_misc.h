@@ -24,6 +24,7 @@
 #include <stdarg.h>
 
 #include "doomtype.h"
+#include "sys_kaios.h"
 
 boolean M_WriteFile(const char *name, void *source, int length);
 int M_ReadFile(const char *name, byte **buffer);
@@ -50,23 +51,6 @@ boolean M_StringEndsWith(const char *s, const char *suffix);
 int M_vsnprintf(char *buf, size_t buf_len, const char *s, va_list args);
 int M_snprintf(char *buf, size_t buf_len, const char *s, ...) PRINTF_ATTR(3, 4);
 char *M_OEMToUTF8(const char *ansi);
-
-#ifdef EMSCRIPTEN
-#define FS_WRITE_MOUNT_POINT "/save"
-#else
-#define FS_WRITE_MOUNT_POINT "."
-#endif
-
-// On KaiOS IndexedDB refuses to save files bigger than 16 Mb
-// So we split the data into 8 Mb chunks
-#define FS_MAX_FILE_SIZE (8 * 1024 * 1024)
-
-extern void sys_fs_init(void);
-extern int sys_fs_init_get_done(void);
-extern void sys_fs_sync(void);
-extern int sys_fs_sync_get_done(void);
-extern void sys_take_wake_lock(void);
-extern void sys_free_wake_lock(void);
 
 #endif
 
