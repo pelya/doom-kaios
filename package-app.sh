@@ -4,7 +4,7 @@ DIR="$1"
 [ -z "$DIR" ] && DIR=debug
 
 cd app
-cp -f *.webapp *.html *.js *.png *.jpg *.ico *.gif ../$DIR
+cp -f *.webapp *json *.html *.js *.png *.jpg *.ico *.gif ../$DIR
 cd ..
 
 cd $DIR || exit 1
@@ -17,3 +17,7 @@ cp -f *.webapp *.html *.js *.mem *.data *.wasm *.png *.jpg *.ico *.gif /var/www/
 
 rm -f application.zip
 zip $LEVEL application.zip *.webapp *.html *.js *.mem *.data *.wasm *.png *.jpg *.ico *.gif
+
+zip Freedoom-omnisd.zip application.zip metadata.json
+
+mv application.zip Freedoom.zip
