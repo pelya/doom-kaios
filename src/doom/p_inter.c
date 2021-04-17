@@ -28,6 +28,7 @@
 #include "deh_misc.h"
 #include "doomstat.h"
 
+#include "m_argv.h"
 #include "m_random.h"
 #include "i_system.h"
 
@@ -688,8 +689,60 @@ P_KillMobj
 	if (target->flags & MF_COUNTKILL)
 	    source->player->killcount++;	
 
+	// Dirty, dirty hack to show a bit of walkthrough on the first map
 	if (target->player)
 	    source->player->frags[target->player-players]++;
+
+	if (gamemap == 1
+		&& gameepisode == 1
+		&& source->player->killcount == (gameskill < sk_medium ? 1 : 2)
+		&& strcmp(cmdline_iwad, "freedoom-demo.wad") == 0)
+	{
+		EM_ASM({
+			const p = document.createElement('P');
+			const t = document.createTextNode('Activate the switch on the wall with # key to open the door');
+			let cnt = 0;
+			let timer = null;
+			p.appendChild(t);
+			document.body.appendChild(p);
+
+			p.style.position = 'absolute';
+			p.style.display = 'block';
+			p.style.top = '10%';
+			p.style.width = '100%';
+			p.style.height = 'auto';
+			p.style.backgroundColor = 'transparent';
+			p.style.color = 'yellow';
+			p.style.zIndex = '10';
+			p.style.fontSize = 'large';
+			p.style.fontWeight = 'bold';
+			p.style.textAlign = 'center';
+			p.style.opacity = '0';
+
+			timer = setInterval(function() {
+				p.style.opacity = (cnt / 10.0).toString();
+				//Module.print('Walkthrough Opacity: ' + (cnt / 10.0).toString());
+				if (cnt < 10) {
+					cnt += 1;
+				} else {
+					clearInterval(timer);
+					setTimeout(function() {
+						timer = setInterval(function() {
+							p.style.opacity = (cnt / 10.0).toString();
+							//Module.print('Walkthrough Opacity: ' + (cnt / 10.0).toString());
+							if (cnt > 0) {
+								cnt -= 1;
+							} else {
+								document.body.removeChild(p);
+								clearInterval(timer);
+								//Module.print('Walkthrough stop timer');
+							}
+						}, 200);
+					}, 5000);
+				}
+			}, 200);
+		});
+	}
     }
     else if (!netgame && (target->flags & MF_COUNTKILL) )
     {
