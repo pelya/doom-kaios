@@ -11,7 +11,7 @@ FOLDER="$1"
 [ -z "$FOLDER" ] && FOLDER=debug
 ID=doom
 
-adb push ${FOLDER}/application.zip /data/local/tmp/b2g/$ID/application.zip || exit 1
+adb push ${FOLDER}/Freedoom.zip /data/local/tmp/b2g/$ID/application.zip || exit 1
 
 cd make-kaios-install
 
