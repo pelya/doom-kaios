@@ -41,6 +41,10 @@ So for KaiOS, two apps will need to be distributed in the same package.
 
 == KaiOS instructions ==========================================================
 
+KaiOS 2.5.2 has Firefox/Gecko version 48. It does not support WebAssembly, but it supports asm.js.
+You will need to add '-s WASM=0' to your Emscripten compiler flags.
+It also does not support SharedArrayBuffer, so pthreads multithreading is not available.
+
 Download and build Emscripten, as described on their page: https://emscripten.org/
 
 Put directory with emsdk script into your $PATH
