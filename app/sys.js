@@ -3,7 +3,7 @@ var sys_fs_init_is_done = 0;
 var sys_fs_sync_is_done = 1;
 var sys_screen_wake_lock = null;
 var sys_device_ram_size_mb = 0;
-// Copy WAD file from SD card into emscripten idb filesystem
+// Copy WAD file from SD card into emscripten idb filesystem, this is used by Freedoom
 var sys_open_wad_file_name = null;
 var sys_open_wad_file_blob = null;
 var sys_open_wad_file_buffer = null;

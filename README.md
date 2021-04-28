@@ -184,8 +184,6 @@ it should be accessible from somewhere in the app, like settings dialog.
 
 You will also need to modify publisher ID and app name in app/sys.js in getKaiAd().
 
-Netplay will likely never be added. WebRTC is hard.
-
 There is supposed to be a hidden API to use UDP sockets directly on KaiOS, without WebRTC wrappers:
 
 https://www.w3.org/TR/tcp-udp-sockets/
@@ -201,3 +199,10 @@ It requires privileged app permissions - add following code to your manifest.web
 
 Privileged app cannot contain Javascript code embedded into HTML directly,
 you must use <script src="..."> everywhere, the embedded Javascript won't be executed.
+
+It is possible to read files from SD card without "device-storage:sdcard" permission,
+by registering an activity to accept the file from the file manager or from Downloads app:
+
+https://github.com/pelya/doom-kaios/blob/master/app/manifest.webapp#L36
+
+https://github.com/pelya/doom-kaios/blob/master/app/sys.js#L125
