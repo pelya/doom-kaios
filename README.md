@@ -27,6 +27,8 @@ Emscripten is © 2010-2018 Emscripten authors, see [AUTHORS](https://raw.githubu
 
 == KaiOS notes =================================================================
 
+KaiStore link: https://www.kaiostech.com/store/apps/?bundle_id=kaios.app.freedoom
+
 Music is disabled, because it's very CPU intensive and slows down the game to a halt.
 
 Netplay will likely never be added.
@@ -40,8 +42,6 @@ you launch SETUP.EXE, select the server from the list, and then it launches DOOM
 So for KaiOS, two apps will need to be distributed in the same package.
 
 == KaiOS instructions ==========================================================
-
-KaiStore link: https://www.kaiostech.com/store/apps/?bundle_id=kaios.app.freedoom
 
 KaiOS 2.5.2 has Firefox/Gecko version 48. It does not support WebAssembly, but it supports asm.js.
 You will need to add '-s WASM=0' to your Emscripten compiler flags.
