@@ -184,7 +184,8 @@ If apps aren't monetized, KaiStore team would mark it a low priority and the QA 
 To show a fullscreen advertisement, call sys_show_fullscreen_advertisement(),
 it should be accessible from somewhere in the app, like settings dialog.
 
-You will also need to modify publisher ID and app name in app/sys.js in getKaiAd().
+You will need to modify publisher ID and app name in app/sys.js in sys_fetch_new_advertisement().
+App name should also be changed in app/index.html.
 
 There is supposed to be a hidden API to use UDP sockets directly on KaiOS, without WebRTC wrappers:
 
