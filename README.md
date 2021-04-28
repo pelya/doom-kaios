@@ -154,11 +154,25 @@ You can monitor your app memory usage by using 'top' command and watching RSS me
 
 QA testing may take from 2 days up to 3 weeks, if there are many other apps to test.
 
+To detect the amount of RAM on the device - add following code to your manifest.webapp:
+
+    "type": "privileged",
+    "permissions": {
+        "feature-detection": {}
+    },
+    "dependencies": {
+        "ads-sdk": "1.4.1"
+    }
+
+Then you can use the function sys_get_device_ram_size_megabytes() to get RAM size in megabytes.
+KaiOS phones have either 256 or 512 MB RAM. Note that the amount of memory available to Javascript
+will be much smaller than the physical RAM size, around 200 MB for devices with 512 MB RAM.
+
 Maximum size of application.zip for uploading to KaiOS Store is currently 20 Mb, and QA will complain if it's bigger than 6 Mb.
 
-The store does accept games in landscape mode. Device screen is 320x240 pixels, and SDL will stretch smaller video output to fullscreen.
+The store accepts games in landscape mode. Device screen is 320x240 pixels, and SDL will stretch smaller video output to fullscreen.
 
-KaiOS Store does provide app updates, however it would require user interaction.
+KaiOS Store does provide app updates, however it would require user interaction, so it's discouraged.
 
 The KaiAds is deeply integrated to the KaiStore, the app analytics is part of the KaiAds SDK
 and developers need to go to KaiAds page to access the app install and usage statistics.
