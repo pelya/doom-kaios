@@ -25,7 +25,7 @@
 #include <stdlib.h>
 
 #ifdef EMSCRIPTEN
-#include "emscripten.h"
+#include <emscripten.h>
 #endif
 
 #include "sys_kaios.h"
@@ -143,14 +143,14 @@ void sys_exit_app(void)
 	EM_ASM({
 		var sys_shutdown_anim = 100;
 		setInterval(function() {
-			if (sys_fs_sync_is_done) {
+			sys_shutdown_anim -= 20;
+			if (sys_fs_sync_is_done && sys_shutdown_anim > -200) {
 				window.open('', '_self').close();
 			}
 			if (sys_shutdown_anim > 0) {
-				sys_shutdown_anim -= 20;
+				document.getElementById('canvas').style.height = String(sys_shutdown_anim) + '%';
+				document.getElementById('canvas').style.marginTop = String((100 - sys_shutdown_anim) / 2) + '%';
 			}
-			document.getElementById('canvas').style.height = String(sys_shutdown_anim) + '%';
-			document.getElementById('canvas').style.marginTop = String((100 - sys_shutdown_anim) / 2) + '%';
 		}, 20);
 	});
 #endif // EMSCRIPTEN
@@ -164,7 +164,7 @@ void sys_hide_splash_image(void)
 #endif // EMSCRIPTEN
 }
 
-extern void sys_show_fullscreen_advertisement(void)
+void sys_show_fullscreen_advertisement(void)
 {
 #ifdef EMSCRIPTEN
 	EM_ASM({
@@ -173,4 +173,13 @@ extern void sys_show_fullscreen_advertisement(void)
 		}
 	});
 #endif // EMSCRIPTEN
+}
+
+int sys_get_device_ram_size_megabytes(void)
+{
+	int size = 0;
+#ifdef EMSCRIPTEN
+	size = EM_ASM_INT( return sys_device_ram_size_mb; );
+#endif // EMSCRIPTEN
+	return size;
 }
